@@ -1594,9 +1594,205 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
 ::-webkit-scrollbar-track{background:#080610}
 ::-webkit-scrollbar-thumb{background:#1e1428}
 ::-webkit-scrollbar-thumb:hover{background:#2e2048}
+
+/* ═══════════════════════════════════════════════
+   ENTRY GATE — full-page lock screen
+═══════════════════════════════════════════════ */
+#entry-gate{
+  position:fixed;inset:0;z-index:99999;
+  background:#06040e;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;
+  gap:0;
+}
+#entry-gate.unlocked{
+  animation:gateExit 0.7s 0.1s ease-in forwards;
+  pointer-events:none;
+}
+@keyframes gateExit{
+  0%{opacity:1;transform:none}
+  100%{opacity:0;transform:scale(1.015)}
+}
+
+/* Grain on gate too */
+#entry-gate::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.055'/%3E%3C/svg%3E");
+  opacity:0.5;mix-blend-mode:overlay;
+}
+
+.gate-case-label{
+  font-family:'Courier Prime',monospace;
+  font-size:8px;letter-spacing:0.35em;text-transform:uppercase;
+  color:#1e1430;margin-bottom:28px;
+  position:relative;z-index:2;
+}
+
+/* Missing file card */
+.gate-card{
+  background:var(--paper);
+  width:min(380px, 88vw);
+  padding:32px 28px 28px;
+  position:relative;z-index:2;
+  box-shadow:
+    0 20px 60px rgba(4,2,18,0.95),
+    0 0 0 0.5px rgba(40,20,80,0.15),
+    0 0 80px rgba(107,63,160,0.04);
+}
+/* Paper lines */
+.gate-card::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(
+    0deg,transparent,transparent 24px,
+    rgba(0,0,0,0.025) 24px,rgba(0,0,0,0.025) 25px
+  );
+}
+/* Worn corners */
+.gate-card::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 0% 0%,rgba(0,0,0,0.1) 0%,transparent 35%),
+    radial-gradient(ellipse at 100% 100%,rgba(0,0,0,0.08) 0%,transparent 35%);
+}
+
+.gate-stamp{
+  font-family:'Special Elite',monospace;
+  font-size:clamp(18px,5vw,28px);
+  letter-spacing:0.25em;
+  color:#8a1010;
+  text-shadow:
+    0 0 0 #5a0808,
+    1px 0 0 rgba(139,16,16,0.4),
+    -1px 0 0 rgba(100,10,10,0.25),
+    0 0 16px rgba(139,16,16,0.2);
+  transform:rotate(-2.5deg);
+  display:inline-block;
+  margin-bottom:16px;
+  position:relative;z-index:2;
+}
+.gate-file-label{
+  font-family:'Courier Prime',monospace;
+  font-size:8px;letter-spacing:0.25em;text-transform:uppercase;
+  color:#6a5038;margin-bottom:4px;
+  position:relative;z-index:2;
+}
+.gate-case-name{
+  font-family:'Special Elite',monospace;
+  font-size:clamp(14px,3.5vw,20px);
+  color:var(--ink);letter-spacing:0.08em;
+  margin-bottom:6px;
+  position:relative;z-index:2;
+}
+.gate-case-sub{
+  font-family:'Courier Prime',monospace;
+  font-size:9px;color:#8a6848;letter-spacing:0.12em;
+  margin-bottom:24px;
+  position:relative;z-index:2;
+  border-bottom:1px solid rgba(0,0,0,0.12);
+  padding-bottom:16px;
+}
+.gate-field-label{
+  font-family:'Courier Prime',monospace;
+  font-size:8px;letter-spacing:0.22em;text-transform:uppercase;
+  color:#6a5038;margin-bottom:6px;
+  position:relative;z-index:2;display:block;
+}
+.gate-pw-input{
+  width:100%;
+  font-family:'Courier Prime',monospace;
+  font-size:15px;letter-spacing:0.25em;
+  background:rgba(0,0,0,0.07);
+  border:1px solid rgba(0,0,0,0.15);
+  border-bottom:2px solid rgba(0,0,0,0.2);
+  color:var(--ink);
+  padding:9px 12px;
+  outline:none;
+  transition:border-color 0.2s,background 0.2s;
+  position:relative;z-index:2;
+  display:block;
+  margin-bottom:6px;
+}
+.gate-pw-input:focus{
+  background:rgba(0,0,0,0.1);
+  border-bottom-color:rgba(107,63,160,0.5);
+}
+.gate-pw-input.wrong{
+  animation:entryShake 0.4s ease;
+  border-bottom-color:rgba(139,16,16,0.6);
+}
+@keyframes entryShake{
+  0%,100%{transform:none}
+  20%{transform:translateX(-6px)}
+  40%{transform:translateX(6px)}
+  60%{transform:translateX(-4px)}
+  80%{transform:translateX(3px)}
+}
+.gate-err-msg{
+  font-family:'Courier Prime',monospace;
+  font-size:8px;letter-spacing:0.18em;text-transform:uppercase;
+  color:#7a1a1a;opacity:0;transition:opacity 0.3s;
+  margin-bottom:14px;position:relative;z-index:2;display:block;
+  min-height:12px;
+}
+.gate-err-msg.show{opacity:1}
+.gate-enter-btn{
+  width:100%;
+  font-family:'Special Elite',monospace;
+  font-size:12px;letter-spacing:0.2em;text-transform:uppercase;
+  padding:10px;
+  background:var(--ink);color:var(--paper);
+  border:none;cursor:pointer;
+  position:relative;z-index:2;
+  transition:background 0.2s,box-shadow 0.2s;
+}
+.gate-enter-btn:hover{
+  background:#2e2212;
+  box-shadow:0 4px 16px rgba(4,2,18,0.5);
+}
+.gate-footer{
+  font-family:'Courier Prime',monospace;
+  font-size:8px;letter-spacing:0.15em;
+  color:#1e1428;
+  text-align:center;
+  margin-top:18px;
+  position:relative;z-index:2;
+}
+
+/* App wrapper — hidden until gate is passed */
+#app-wrapper{
+  display:none;
+}
+#app-wrapper.visible{
+  display:block;
+}
 </style>
 </head>
 <body>
+
+<!-- ══════════════════════════════════════════
+     ENTRY GATE — shown before anything else
+══════════════════════════════════════════ -->
+<div id="entry-gate">
+  <div class="gate-case-label">&#9632; RESTRICTED — AUTHORISED ACCESS ONLY</div>
+  <div class="gate-card">
+    <div class="gate-stamp">&#9888; CASE FILE</div>
+    <div class="gate-file-label">Investigation Reference</div>
+    <div class="gate-case-name">The Disappearance of Elara Voss</div>
+    <div class="gate-case-sub">Dunmore Village &nbsp;&middot;&nbsp; 14th November &nbsp;&middot;&nbsp; Status: OPEN</div>
+    <label class="gate-field-label" for="entry-pw-input">Enter access code to continue</label>
+    <input class="gate-pw-input" id="entry-pw-input" type="password"
+      placeholder="&#9670; &#9670; &#9670; &#9670; &#9670; &#9670; &#9670; &#9670;"
+      autocomplete="off" />
+    <span class="gate-err-msg" id="entry-err">Incorrect access code. Try again.</span>
+    <button class="gate-enter-btn" onclick="submitEntryGate()">Open Case File</button>
+  </div>
+  <div class="gate-footer">This case file is restricted. Unauthorised access is not permitted.</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     APP WRAPPER — hidden until unlocked
+══════════════════════════════════════════ -->
+<div id="app-wrapper">
 
 <!-- ══════════════════════════════════════════
      MISSING PERSON BANNER
@@ -3415,6 +3611,56 @@ window.onload=()=>{
     desc: "Family reports her missing. The officer taking the call logs it as low priority — a teenager staying out late. They will regret this."
   });
 };
+
+/* ════════════════════════════════════════
+   ENTRY GATE
+════════════════════════════════════════ */
+
+// Set your access code here — this is separate from the GM password
+const ENTRY_PASSWORD = 'elara1947';
+
+function submitEntryGate(){
+  const input = document.getElementById('entry-pw-input');
+  const err   = document.getElementById('entry-err');
+  if(input.value === ENTRY_PASSWORD){
+    // Correct — unlock the app
+    const gate = document.getElementById('entry-gate');
+    const app  = document.getElementById('app-wrapper');
+    gate.classList.add('unlocked');
+    app.classList.add('visible');
+    // Remove gate from DOM after animation
+    setTimeout(()=>{ gate.style.display='none'; },900);
+    // Init the app now it's visible
+    if(typeof window.onload === 'function') window.onload();
+  } else {
+    // Wrong
+    err.classList.add('show');
+    input.classList.add('wrong');
+    input.value='';
+    setTimeout(()=>input.classList.remove('wrong'),450);
+    setTimeout(()=>err.classList.remove('show'),2500);
+    input.focus();
+  }
+}
+
+// Allow Enter key on password field
+document.getElementById('entry-pw-input').addEventListener('keydown', e=>{
+  if(e.key==='Enter') submitEntryGate();
+});
+
+// Prevent window.onload running before gate is passed
+// Store the original onload and replace it with a no-op
+// It will be called manually above after unlock
+const _appOnload = window.onload;
+window.onload = null;
+// Kick off entry screen focus
+window.addEventListener('load', ()=>{
+  document.getElementById('entry-pw-input').focus();
+  // Stash the app init for after unlock
+  window.onload = _appOnload;
+});
 </script>
+
+</div><!-- end #app-wrapper -->
 </body>
 </html>
