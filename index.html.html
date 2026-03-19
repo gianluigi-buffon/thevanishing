@@ -1,0 +1,3420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MISSING — Case File</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════
+   ROOT & RESET
+═══════════════════════════════════════════════ */
+:root {
+  --bg:          #0a0810;
+  --bg2:         #0d0b14;
+  --bg3:         #110f18;
+  --cork:        #16120e;
+  --cork2:       #1a1510;
+  --paper:       #d6ccaa;
+  --paper2:      #cdc29e;
+  --paper3:      #c4b892;
+  --ink:         #1c1408;
+  --ink2:        #2e2212;
+  --ink-faded:   #4a3820;
+  --purple:      #6b3fa0;
+  --purple-dim:  #3d2460;
+  --purple-glow: rgba(107,63,160,0.35);
+  --blue:        #2a4a7f;
+  --blue-dim:    #1a2f50;
+  --blue-glow:   rgba(42,74,127,0.3);
+  --red:         #7a1a1a;
+  --red-bright:  #b02020;
+  --red-glow:    rgba(176,32,32,0.4);
+  --green-dark:  #1a3a1a;
+  --gold:        #8a6a28;
+  --shadow:      rgba(0,0,0,0.9);
+  --pin-purple:  #7a3ab8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--ink);overflow-x:hidden}
+body{font-family:'IM Fell English',serif;cursor:crosshair}
+
+/* ── Grain overlay — two-layer film grain ── */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:9998;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.09'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 90 90' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g2'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g2)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:0.65;mix-blend-mode:overlay;
+  animation:grainShift 8s steps(1) infinite;
+}
+@keyframes grainShift{
+  0%{background-position:0 0,0 0}
+  12.5%{background-position:-18px -22px,12px 8px}
+  25%{background-position:8px -14px,-6px 20px}
+  37.5%{background-position:-24px 10px,18px -10px}
+  50%{background-position:14px 20px,-14px -6px}
+  62.5%{background-position:-8px -28px,6px 16px}
+  75%{background-position:22px 6px,-20px -18px}
+  87.5%{background-position:-16px 18px,10px -24px}
+}
+
+/* ═══════════════════════════════════════════════
+   MISSING PERSON BANNER — FIXED
+═══════════════════════════════════════════════ */
+#missing-banner{
+  position:sticky;top:0;z-index:500;
+  background:linear-gradient(to bottom,#0a0810 0%,#0d0b14 100%);
+  border-bottom:2px solid #2a1a40;
+  box-shadow:0 4px 32px rgba(0,0,0,0.9),0 0 60px rgba(107,63,160,0.08);
+  padding:12px 20px 10px;
+}
+.banner-inner{
+  max-width:1100px;margin:0 auto;
+  display:flex;align-items:center;gap:18px;
+  flex-wrap:wrap;
+}
+.missing-stamp{
+  font-family:'Special Elite',monospace;
+  font-size:clamp(22px,4vw,40px);
+  letter-spacing:0.28em;
+  color:#9a1010;
+  /* Worn ink: multiple red shadows at slight offsets mimic uneven ink coverage */
+  text-shadow:
+    0 0 0 #6a0808,
+    1px 0 0 rgba(139,16,16,0.5),
+    -1px 0 0 rgba(139,16,16,0.3),
+    0 1px 0 rgba(80,0,0,0.4),
+    2px 1px 0 rgba(100,10,10,0.2),
+    0 0 18px rgba(154,16,16,0.35);
+  /* Slight tilt — like a rubber stamp that wasn't pressed perfectly straight */
+  transform:rotate(-2.8deg);
+  transform-origin:left center;
+  display:inline-block;
+  white-space:nowrap;
+  align-self:flex-start;
+  padding-top:6px;
+  writing-mode:horizontal-tb;
+  /* Subtle opacity variation for aged ink look */
+  animation:stampAge 9s infinite;
+  position:relative;
+}
+/* Worn edge effect via pseudo — a faint horizontal bleed */
+.missing-stamp::after{
+  content:attr(data-text);
+  position:absolute;
+  inset:0;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(139,16,16,0.08);
+  transform:scaleX(1.01) translateX(1px);
+  pointer-events:none;
+}
+@keyframes stampAge{
+  0%,85%,100%{opacity:1}
+  88%{opacity:0.82}
+  92%{opacity:0.95}
+  96%{opacity:0.78}
+}
+@keyframes redFlicker{0%,96%,100%{opacity:1}97%{opacity:0.65}98.5%{opacity:1}99.5%{opacity:0.8}}
+.banner-photo{
+  font-size:52px;line-height:1;
+  width:72px;height:72px;
+  border:2px solid #3a2a18;
+  background:rgba(0,0,0,0.4);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 0 12px rgba(0,0,0,0.6),0 3px 12px rgba(0,0,0,0.7);
+  flex-shrink:0;cursor:pointer;transition:transform 0.2s;position:relative;
+}
+.banner-photo:hover{transform:scale(1.06)}
+.banner-photo-hint{position:absolute;bottom:2px;right:3px;font-size:9px;font-family:'Courier Prime',monospace;color:#5a4020;letter-spacing:0}
+.banner-fields{display:flex;flex-wrap:wrap;gap:8px 20px;flex:1;min-width:280px}
+.bfield{display:flex;flex-direction:column;gap:2px}
+.bfield-label{font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:0.22em;text-transform:uppercase;color:#4a3860}
+.bfield input,.bfield textarea{
+  background:transparent;border:none;border-bottom:1px solid #2a1f30;
+  font-family:'Special Elite',monospace;font-size:13px;color:#b8a890;
+  outline:none;padding:1px 2px;transition:border-color 0.2s;
+  min-width:100px;
+}
+.bfield input:focus,.bfield textarea:focus{border-bottom-color:#5a3a80}
+.bfield.wide input{min-width:200px}
+.bfield textarea{resize:none;height:32px;font-size:11px;line-height:1.4}
+
+/* Photo emoji picker */
+.photo-picker{
+  display:none;position:absolute;top:78px;left:0;
+  background:#100c18;border:1px solid #2a1a40;
+  padding:8px;z-index:600;flex-wrap:wrap;gap:4px;width:200px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.95);
+}
+.photo-picker.open{display:flex}
+.photo-opt{font-size:22px;cursor:pointer;padding:2px;transition:transform 0.1s}
+.photo-opt:hover{transform:scale(1.25)}
+
+/* ═══════════════════════════════════════════════
+   CASE NAME
+═══════════════════════════════════════════════ */
+#case-name-bar{
+  background:var(--bg2);
+  border-bottom:1px solid #1e1530;
+  padding:10px 20px;
+  text-align:center;
+}
+#case-name-input{
+  font-family:'Special Elite',monospace;
+  font-size:clamp(16px,3vw,26px);
+  letter-spacing:0.12em;
+  color:#8a7a9a;
+  background:transparent;border:none;outline:none;
+  text-align:center;width:100%;max-width:700px;
+  border-bottom:1px dashed #2a1f38;
+  transition:color 0.2s,border-color 0.2s;
+}
+#case-name-input:focus{color:#c8b8d8;border-bottom-color:#5a3a80}
+
+/* ═══════════════════════════════════════════════
+   HEADER BAR (HUD)
+═══════════════════════════════════════════════ */
+#hud{
+  background:linear-gradient(to bottom,#0d0b14,#0a0810);
+  border-bottom:1px solid #1e1530;
+  padding:8px 20px;
+  display:flex;align-items:center;justify-content:center;
+  gap:24px;flex-wrap:wrap;
+}
+.hud-block{display:flex;flex-direction:column;align-items:center;gap:2px}
+.hud-label{font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:#3a2a50}
+.hud-value{font-family:'Special Elite',monospace;font-size:13px;color:#6a5880;letter-spacing:0.1em}
+.hud-sep{width:1px;height:36px;background:#1e1530;flex-shrink:0}
+#hud-timer{font-family:'Courier Prime',monospace;font-size:15px;color:#4a3860;letter-spacing:0.15em}
+.token-used{filter:grayscale(1) brightness(0.25)}
+#hud-message{
+  font-family:'IM Fell English',serif;font-style:italic;
+  font-size:11px;color:#4a3860;letter-spacing:0.05em;
+  text-align:center;flex-basis:100%;
+  transition:color 0.8s;
+}
+#hud-message.nervous{color:#9a5050;animation:nervousPulse 3s infinite}
+@keyframes nervousPulse{0%,100%{opacity:1}50%{opacity:0.6}}
+
+/* Confidence meter */
+.confidence-wrap{display:flex;flex-direction:column;align-items:center;gap:3px}
+.confidence-bar-outer{
+  width:120px;height:6px;background:#1a1228;
+  border:1px solid #2a1a40;position:relative;
+  transition:box-shadow 0.8s;
+}
+/* Pulsing glow when confidence > 60% */
+.confidence-bar-outer.glowing{
+  box-shadow:
+    0 0 6px rgba(107,63,160,0.5),
+    0 0 14px rgba(107,63,160,0.25),
+    0 0 28px rgba(107,63,160,0.12);
+  animation:confPulse 2s ease-in-out infinite;
+}
+@keyframes confPulse{
+  0%,100%{box-shadow:0 0 6px rgba(107,63,160,0.4),0 0 12px rgba(107,63,160,0.18)}
+  50%{box-shadow:0 0 10px rgba(107,63,160,0.7),0 0 22px rgba(107,63,160,0.35),0 0 38px rgba(107,63,160,0.14)}
+}
+.confidence-bar-inner{
+  height:100%;width:0%;
+  background:linear-gradient(to right,var(--blue),var(--purple));
+  transition:width 0.5s ease;
+  box-shadow:0 0 8px var(--purple-glow);
+}
+#confidence-pct{font-family:'Courier Prime',monospace;font-size:10px;color:#5a4870}
+
+/* ── Camera flash on examine ── */
+#cam-flash{
+  position:fixed;inset:0;z-index:9500;
+  background:rgba(255,255,255,0);
+  pointer-events:none;
+}
+#cam-flash.fire{animation:camFlash 0.55s ease-out forwards}
+@keyframes camFlash{
+  0%  {background:rgba(255,255,255,0)}
+  8%  {background:rgba(255,255,255,0.92)}
+  18% {background:rgba(255,255,255,0.6)}
+  40% {background:rgba(255,255,255,0.1)}
+  100%{background:rgba(255,255,255,0)}
+}
+
+/* ── Case Notes scratchpad ── */
+#notes-btn{
+  font-family:'Special Elite',monospace;font-size:10px;
+  letter-spacing:0.14em;text-transform:uppercase;
+  padding:5px 12px;background:transparent;
+  color:#2e1e40;border:1px solid #1e1230;
+  cursor:pointer;transition:all 0.2s;
+  white-space:nowrap;
+}
+#notes-btn:hover{color:#6a3a90;border-color:#3a1a60;background:rgba(107,63,160,0.06)}
+#notes-btn.active{color:#8a50c0;border-color:#4a2070;background:rgba(107,63,160,0.1)}
+
+#notes-panel{
+  position:fixed;
+  bottom:54px;right:16px;
+  width:310px;
+  z-index:600;
+  background:#0a0812;
+  border:1px solid #1e1030;
+  box-shadow:0 8px 36px rgba(0,0,0,0.9),0 0 24px rgba(107,63,160,0.08);
+  display:none;
+  flex-direction:column;
+  animation:notesSlide 0.2s ease;
+}
+#notes-panel.open{display:flex}
+@keyframes notesSlide{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.notes-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 12px 7px;
+  background:#0d0a14;
+  border-bottom:1px solid #160e28;
+  flex-shrink:0;
+}
+.notes-header-label{
+  font-family:'Courier Prime',monospace;font-size:8px;
+  letter-spacing:0.25em;text-transform:uppercase;color:#2e1e40;
+}
+.notes-close{
+  font-family:'Courier Prime',monospace;font-size:10px;
+  color:#1e1428;background:transparent;border:none;cursor:pointer;
+  transition:color 0.15s;padding:0 2px;
+}
+.notes-close:hover{color:#5a2a80}
+
+#notes-textarea{
+  width:100%;min-height:200px;max-height:380px;
+  background:#080610;
+  border:none;outline:none;resize:vertical;
+  font-family:'Courier Prime',monospace;font-size:11px;
+  color:#5a4870;line-height:1.7;
+  padding:12px 14px;
+  letter-spacing:0.03em;
+}
+#notes-textarea::placeholder{
+  color:#1a1228;font-style:italic;
+}
+#notes-textarea:focus{color:#7a6090}
+
+.notes-footer{
+  padding:5px 12px 6px;
+  background:#0a0810;
+  border-top:1px solid #110820;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.notes-saved{
+  font-family:'Courier Prime',monospace;font-size:7.5px;
+  letter-spacing:0.15em;color:#1e1428;
+  text-transform:uppercase;
+  transition:color 0.3s;
+}
+.notes-saved.flash{color:#3a2050}
+.notes-char-count{
+  font-family:'Courier Prime',monospace;font-size:7.5px;
+  letter-spacing:0.1em;color:#160e20;
+}
+
+/* ═══════════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════════ */
+#tab-bar{
+  display:flex;background:#080610;
+  border-bottom:1px solid #1e1530;
+  position:sticky;top:0;z-index:400;
+}
+.tab{
+  font-family:'Special Elite',monospace;font-size:11px;
+  letter-spacing:0.18em;text-transform:uppercase;
+  padding:10px 24px;color:#3a2a50;
+  cursor:pointer;border-right:1px solid #100c18;
+  transition:all 0.2s;position:relative;user-select:none;
+}
+.tab:hover{color:#7a5a9a;background:#0d0b14}
+.tab.active{color:#b8a8c8;background:#0d0b14}
+.tab.active::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--purple)}
+.tab-badge{
+  display:inline-block;font-size:9px;font-family:'Courier Prime',monospace;
+  background:#160c28;color:#4a3060;
+  padding:1px 5px;margin-left:5px;vertical-align:middle;
+}
+.tab.active .tab-badge{background:#2a1448;color:var(--purple)}
+
+/* ═══════════════════════════════════════════════
+   PANEL WRAPPER
+═══════════════════════════════════════════════ */
+.panel{display:none}
+.panel.active{display:block}
+
+/* ═══════════════════════════════════════════════
+   TOOLBAR
+═══════════════════════════════════════════════ */
+.toolbar{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:10px 24px;
+  background:linear-gradient(to bottom,#0d0b14,#0a0810);
+  border-bottom:1px solid #160c20;
+}
+.toolbar-label{font-family:'Courier Prime',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#3a2a48}
+.btn{
+  font-family:'Special Elite',monospace;font-size:11px;letter-spacing:0.12em;
+  padding:6px 16px;border:1px solid;cursor:pointer;
+  transition:all 0.2s;text-transform:uppercase;background:transparent;
+}
+.btn-add{color:#a890c0;border-color:#3a2a50}
+.btn-add:hover{background:#160c28;color:#c8b0e0;border-color:#6a3a90;box-shadow:0 0 10px var(--purple-glow)}
+.btn-setup{color:#7a6a5a;border-color:#3a2a1a}
+.btn-setup:hover{background:#160c08;color:#a08060;border-color:#5a3a20}
+
+/* ═══════════════════════════════════════════════
+   CORK BOARD
+═══════════════════════════════════════════════ */
+#board{
+  min-height:calc(100vh - 300px);
+  background:
+    /* Dark vignette corners */
+    radial-gradient(ellipse at 15% 20%,#1a1214 0%,transparent 55%),
+    radial-gradient(ellipse at 85% 80%,#12100a 0%,transparent 55%),
+    /* Fine wood grain — diagonal micro-lines */
+    repeating-linear-gradient(
+      162deg,
+      transparent,transparent 2px,
+      rgba(30,20,10,0.13) 2px,rgba(30,20,10,0.13) 3px
+    ),
+    repeating-linear-gradient(
+      158deg,
+      transparent,transparent 5px,
+      rgba(20,14,8,0.09) 5px,rgba(20,14,8,0.09) 6px
+    ),
+    /* Coarser grain bands */
+    repeating-linear-gradient(
+      163deg,
+      transparent,transparent 18px,
+      rgba(10,6,2,0.08) 18px,rgba(10,6,2,0.08) 19px
+    ),
+    /* Base cork colour */
+    linear-gradient(140deg,#1a1410 0%,#161008 60%,#1e1612 100%);
+  padding:50px 32px 60px;
+  position:relative;
+  display:flex;flex-wrap:wrap;gap:44px;
+  align-items:flex-start;
+}
+#board::after{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse at center,transparent 38%,rgba(0,0,0,0.72) 100%);
+  pointer-events:none;z-index:1;
+}
+
+/* Empty state */
+.board-empty{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;pointer-events:none;z-index:2;
+}
+.board-empty p{font-family:'Special Elite',monospace;color:#1e1820;font-size:16px;letter-spacing:0.15em;line-height:2}
+.board-empty .big-icon{display:block;font-size:44px;margin-bottom:14px;filter:grayscale(1) brightness(0.2)}
+
+/* ═══════════════════════════════════════════════
+   SUSPECT CARD
+═══════════════════════════════════════════════ */
+.card-wrapper{position:relative;z-index:2;flex-shrink:0}
+.suspect-card{
+  width:248px;
+  background:var(--paper);
+  position:relative;
+  box-shadow:
+    0 10px 36px rgba(4,2,18,0.88),
+    0 2px 8px rgba(8,4,24,0.65),
+    0 0 0 0.5px rgba(30,16,60,0.12),
+    inset 0 0 50px rgba(0,0,0,0.07);
+  padding:30px 18px 16px;
+  cursor:default;
+}
+/* Paper texture */
+.suspect-card::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:
+    repeating-linear-gradient(90deg,transparent,transparent 20px,rgba(0,0,0,0.018) 20px,rgba(0,0,0,0.018) 21px),
+    radial-gradient(ellipse at 8% 92%,rgba(100,80,30,0.14) 0%,transparent 55%),
+    radial-gradient(ellipse at 92% 8%,rgba(0,0,0,0.09) 0%,transparent 50%);
+}
+/* Worn edges */
+.suspect-card::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse at 0% 0%,rgba(0,0,0,0.12) 0%,transparent 40%),
+             radial-gradient(ellipse at 100% 100%,rgba(0,0,0,0.1) 0%,transparent 40%);
+}
+
+/* Purple PIN */
+.suspect-pin{
+  position:absolute;top:-20px;left:50%;transform:translateX(-50%);
+  z-index:30;cursor:default;
+}
+.pin-gem{
+  width:20px;height:20px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#b070f0,#5a1a90);
+  box-shadow:0 3px 8px rgba(0,0,0,0.85),0 0 12px rgba(107,63,160,0.5),inset 0 1px 2px rgba(255,255,255,0.25);
+  margin:0 auto;
+}
+.pin-needle{
+  width:2px;height:16px;
+  background:linear-gradient(to bottom,#9a9a9a,#444);
+  margin:0 auto;box-shadow:1px 1px 3px rgba(0,0,0,0.5);
+}
+.pin-shadow{
+  width:24px;height:4px;border-radius:50%;
+  background:rgba(0,0,0,0.4);
+  margin:0 auto;margin-top:-2px;filter:blur(2px);
+}
+
+/* Card sections */
+.c-section{position:relative;z-index:2}
+.c-avatar{font-size:38px;text-align:center;margin-bottom:6px;cursor:pointer;user-select:none;transition:transform 0.2s}
+.c-avatar:hover{transform:scale(1.12)}
+.c-name-wrap{border-bottom:1px solid rgba(0,0,0,0.18);padding-bottom:8px;margin-bottom:10px;text-align:center}
+.c-name-wrap input{
+  background:transparent;border:none;border-bottom:1px dashed rgba(0,0,0,0.22);
+  font-family:'Special Elite',monospace;font-size:14px;color:var(--ink);
+  text-align:center;width:100%;outline:none;
+}
+.c-field{margin-bottom:9px}
+.c-label{font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:0.22em;text-transform:uppercase;color:#6a5038;margin-bottom:3px}
+.c-field input[type=text],.c-field textarea{
+  width:100%;background:rgba(0,0,0,0.055);
+  border:1px solid rgba(0,0,0,0.12);border-radius:2px;
+  padding:4px 6px;font-family:'Courier Prime',monospace;font-size:10.5px;
+  color:var(--ink2);resize:none;outline:none;line-height:1.4;
+  transition:background 0.2s,border-color 0.2s;
+}
+.c-field input[type=text]:focus,.c-field textarea:focus{background:rgba(0,0,0,0.1);border-color:rgba(107,63,160,0.35)}
+.c-field textarea{height:44px}
+
+/* Suspicion slider */
+.susp-wrap{margin-top:10px}
+.susp-labels{display:flex;justify-content:space-between;font-size:7.5px;color:#6a5038;font-family:'Courier Prime',monospace;letter-spacing:0.1em;margin-bottom:3px}
+.susp-val{text-align:center;font-family:'Special Elite',monospace;font-size:10px;font-weight:bold;margin-bottom:4px;transition:color 0.3s}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;border-radius:0;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:0;background:var(--ink);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.5)}
+
+/* Status badge */
+.status-badge{
+  display:inline-block;font-family:'Courier Prime',monospace;font-size:8px;
+  letter-spacing:0.18em;text-transform:uppercase;padding:2px 7px;border:1px solid;
+  margin-bottom:8px;
+}
+.status-poi{color:#4a6aaa;border-color:#2a3a6a;background:rgba(42,74,127,0.1)}
+.status-suspect{color:#aa4a4a;border-color:#6a2a2a;background:rgba(122,26,26,0.12)}
+.status-cleared{color:#3a6a3a;border-color:#1a3a1a;background:rgba(26,58,26,0.12)}
+.status-arrested{color:#cc3333;border-color:#8a1a1a;background:rgba(139,26,26,0.18);animation:arrestPulse 1.2s infinite}
+@keyframes arrestPulse{0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,0)}50%{box-shadow:0 0 0 4px rgba(192,57,43,0.25)}}
+
+/* Interrogation counter */
+.interro-count{font-family:'Courier Prime',monospace;font-size:9px;color:#8a6848;letter-spacing:0.1em;margin-bottom:6px}
+.interro-count span{color:#aa8860}
+
+/* Card buttons */
+.c-actions{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap}
+.c-btn{
+  font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.12em;
+  padding:5px 8px;border:1px solid;cursor:pointer;background:transparent;
+  text-transform:uppercase;transition:all 0.18s;flex:1;min-width:60px;
+}
+.c-btn-interrogate{color:#7a6848;border-color:#4a3828}
+.c-btn-interrogate:hover{background:rgba(122,104,72,0.12);color:#aa9868;border-color:#6a4828}
+.c-btn-interrogate:disabled{color:#3a2818;border-color:#2a1a0a;cursor:not-allowed}
+.c-btn-arrest{color:#9a3030;border-color:#5a1a1a}
+.c-btn-arrest:hover{background:rgba(154,48,48,0.15);color:#c04040;border-color:#8a2020;box-shadow:0 0 8px var(--red-glow)}
+.c-btn-arrest:disabled{color:#2a1010;border-color:#1a0808;cursor:not-allowed}
+.c-btn-status{color:#5a3a78;border-color:#3a1a50}
+.c-btn-status:hover{background:rgba(90,58,120,0.12);color:#8a5aa8;border-color:#5a2a78}
+.c-btn-remove{color:#4a3828;border-color:#2a1a10;flex:0;padding:5px 9px}
+.c-btn-remove:hover{color:#aa3030;border-color:#6a1a1a}
+.silent-badge{
+  font-family:'Courier Prime',monospace;font-size:8px;color:#3a2818;
+  letter-spacing:0.12em;border:1px solid #2a1808;padding:3px 7px;
+  text-align:center;margin-top:4px;font-style:italic;
+}
+
+/* Emoji picker */
+.c-emoji-picker{
+  display:none;position:absolute;top:20px;left:50%;transform:translateX(-50%);
+  background:#100c18;border:1px solid #2a1840;
+  padding:8px;z-index:200;flex-wrap:wrap;gap:4px;width:190px;
+  box-shadow:0 8px 28px rgba(0,0,0,0.95);
+}
+.c-emoji-picker.open{display:flex}
+.c-emoji-opt{font-size:20px;cursor:pointer;transition:transform 0.1s;padding:2px}
+.c-emoji-opt:hover{transform:scale(1.3)}
+
+/* ═══════════════════════════════════════════════
+   INTERROGATION PANEL
+═══════════════════════════════════════════════ */
+#interro-panel{
+  position:fixed;inset:0;z-index:700;
+  background:rgba(4,2,8,0.96);
+  display:none;align-items:center;justify-content:center;
+  flex-direction:column;
+  backdrop-filter:blur(4px);
+}
+#interro-panel.open{display:flex}
+.interro-inner{
+  background:var(--paper2);
+  max-width:560px;width:90%;
+  padding:32px 28px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.95),0 0 0 1px #3a2818,0 0 40px rgba(107,63,160,0.08);
+  position:relative;
+}
+.interro-inner::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 24px,rgba(0,0,0,0.025) 24px,rgba(0,0,0,0.025) 25px);
+}
+.interro-header{font-family:'Special Elite',monospace;font-size:10px;letter-spacing:0.25em;color:#6a5038;text-transform:uppercase;margin-bottom:4px}
+.interro-name{font-family:'Special Elite',monospace;font-size:20px;color:var(--ink);margin-bottom:16px;border-bottom:1px solid rgba(0,0,0,0.15);padding-bottom:10px}
+.interro-label{font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:#7a5838;margin-bottom:6px}
+.interro-response{
+  font-family:'IM Fell English',serif;font-style:italic;font-size:14px;
+  color:var(--ink2);line-height:1.7;margin-bottom:20px;
+  background:rgba(0,0,0,0.06);padding:12px 14px;border-left:3px solid rgba(107,63,160,0.4);
+  position:relative;z-index:2;
+}
+.interro-count-note{font-family:'Courier Prime',monospace;font-size:10px;color:#8a6848;margin-bottom:16px;position:relative;z-index:2}
+.interro-close{
+  font-family:'Special Elite',monospace;font-size:11px;letter-spacing:0.15em;
+  padding:8px 22px;border:1px solid #4a3828;background:transparent;
+  color:#7a5838;cursor:pointer;text-transform:uppercase;transition:all 0.2s;
+}
+.interro-close:hover{background:rgba(74,56,40,0.15);color:#aa8850;border-color:#6a4828}
+
+/* Interrogation setup textarea */
+.interro-setup{
+  width:100%;background:rgba(0,0,0,0.07);border:1px solid rgba(0,0,0,0.14);
+  border-radius:2px;padding:6px 8px;font-family:'IM Fell English',serif;
+  font-style:italic;font-size:12px;color:var(--ink2);resize:none;outline:none;
+  line-height:1.5;min-height:60px;
+}
+.interro-setup:focus{background:rgba(0,0,0,0.11);border-color:rgba(107,63,160,0.3)}
+
+/* ═══════════════════════════════════════════════
+   EVIDENCE PANEL
+═══════════════════════════════════════════════ */
+#panel-evidence{
+  background:
+    radial-gradient(ellipse at 10% 15%,#0e0c14 0%,transparent 50%),
+    radial-gradient(ellipse at 90% 85%,#0c0a12 0%,transparent 50%),
+    #0a0810;
+}
+.ev-stats-bar{
+  display:flex;gap:20px;padding:8px 24px;
+  background:#080610;border-bottom:1px solid #160c20;flex-wrap:wrap;
+}
+.ev-stat{font-family:'Courier Prime',monospace;font-size:9px;letter-spacing:0.15em;color:#3a2a48;text-transform:uppercase}
+.ev-stat span{font-family:'Special Elite',monospace;font-size:12px}
+.ev-stat.sk span{color:#9a3030}
+.ev-stat.su span{color:#6a5838}
+.ev-stat.sh span{color:#2a2038}
+.ev-stat.st span{color:#5a4868}
+.ev-stat.sl span{color:#5a7040}
+
+/* Evidence cork board */
+.evidence-board{
+  min-height:calc(100vh - 260px);
+  background:
+    radial-gradient(ellipse at 18% 22%,#1a1210 0%,transparent 55%),
+    radial-gradient(ellipse at 82%  78%,#14100a 0%,transparent 55%),
+    repeating-linear-gradient(
+      162deg,transparent,transparent 2px,
+      rgba(30,20,10,0.11) 2px,rgba(30,20,10,0.11) 3px
+    ),
+    repeating-linear-gradient(
+      158deg,transparent,transparent 5px,
+      rgba(20,14,8,0.07) 5px,rgba(20,14,8,0.07) 6px
+    ),
+    repeating-linear-gradient(
+      163deg,transparent,transparent 18px,
+      rgba(10,6,2,0.06) 18px,rgba(10,6,2,0.06) 19px
+    ),
+    linear-gradient(140deg,#18130e 0%,#14100a 60%,#1c1510 100%);
+  padding:52px 32px 70px;
+  position:relative;
+  display:flex;flex-wrap:wrap;gap:46px;
+  align-items:flex-start;
+}
+.evidence-board::after{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse at center,transparent 38%,rgba(0,0,0,0.68) 100%);
+  pointer-events:none;z-index:1;
+}
+.ev-empty{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  text-align:center;pointer-events:none;z-index:2;
+}
+.ev-empty p{font-family:'Special Elite',monospace;color:#1e1820;font-size:15px;letter-spacing:0.15em;line-height:2.2}
+.ev-empty span{display:block;font-size:44px;margin-bottom:14px;filter:grayscale(1) brightness(0.2)}
+
+/* ── Evidence card wrapper (for tilt + drag) ── */
+.ev-card-wrapper{position:relative;z-index:2;flex-shrink:0}
+
+/* ── Evidence PIN (same purple style as suspects) ── */
+.ev-pin{position:absolute;top:-20px;left:50%;transform:translateX(-50%);z-index:30;pointer-events:none}
+.ev-pin-gem{
+  width:18px;height:18px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#9060c8,#3a1060);
+  box-shadow:0 3px 8px rgba(0,0,0,0.85),0 0 10px rgba(107,63,160,0.45),inset 0 1px 2px rgba(255,255,255,0.2);
+  margin:0 auto;
+}
+.ev-pin-needle{width:2px;height:14px;background:linear-gradient(to bottom,#9a9a9a,#444);margin:0 auto;box-shadow:1px 1px 3px rgba(0,0,0,0.5)}
+.ev-pin-shadow{width:22px;height:4px;border-radius:50%;background:rgba(0,0,0,0.4);margin:0 auto;margin-top:-2px;filter:blur(2px)}
+
+/* ── Base card ── */
+.ev-card{
+  width:258px;
+  background:var(--paper3);
+  position:relative;
+  padding:18px 17px 15px;
+  box-shadow:
+    0 8px 30px rgba(4,2,18,0.85),
+    0 2px 7px rgba(8,4,24,0.6),
+    0 0 0 0.5px rgba(30,16,60,0.1),
+    inset 0 0 32px rgba(0,0,0,0.07);
+  transition:box-shadow 0.25s,transform 0.15s;
+}
+/* Paper lines texture */
+.ev-card::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:
+    repeating-linear-gradient(0deg,transparent,transparent 22px,rgba(0,0,0,0.028) 22px,rgba(0,0,0,0.028) 23px),
+    radial-gradient(ellipse at 7% 93%,rgba(100,80,30,0.13) 0%,transparent 55%),
+    radial-gradient(ellipse at 93% 7%,rgba(0,0,0,0.09) 0%,transparent 50%);
+}
+.ev-card:hover{
+  box-shadow:
+    0 14px 44px rgba(4,2,18,0.92),
+    0 4px 10px rgba(8,4,24,0.7),
+    0 0 16px rgba(30,16,60,0.15),
+    inset 0 0 32px rgba(0,0,0,0.07);
+  z-index:10;
+}
+
+/* Status variants */
+.ev-card.ev-locked{
+  border:1px solid #3a2a10;
+  outline:2px solid rgba(138,106,40,0.28);
+  outline-offset:-3px;
+  box-shadow:0 8px 30px rgba(4,2,18,0.88),0 0 18px rgba(138,106,40,0.1);
+}
+.ev-card.ev-key{
+  border-left:5px solid #8a1818;
+  box-shadow:0 8px 30px rgba(4,2,18,0.88),-3px 0 22px rgba(138,24,24,0.32),0 2px 7px rgba(8,4,24,0.6);
+}
+.ev-card.ev-herring{
+  opacity:0.44;
+  filter:saturate(0.3) brightness(0.8);
+}
+.ev-card.ev-unexamined{
+  border:1px solid rgba(138,106,40,0.22);
+}
+
+/* ── Top row ── */
+.ev-top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;position:relative;z-index:2}
+.ev-num{font-family:'Courier Prime',monospace;font-size:8px;color:#7a6040;letter-spacing:0.12em}
+
+/* ── Status STAMPS ── */
+.ev-stamp{
+  font-family:'Special Elite',monospace;
+  font-size:8px;letter-spacing:0.2em;text-transform:uppercase;
+  padding:3px 8px;border:2px solid;
+  display:inline-block;transform:rotate(-2.5deg);
+  font-weight:bold;
+  pointer-events:none;
+}
+.stamp-locked{color:#2a200c;border-color:#2a200c;background:rgba(0,0,0,0.08)}
+.stamp-examined{color:#3a5a2a;border-color:#2a4a1a;background:rgba(30,60,20,0.1)}
+.stamp-key{
+  color:#8a1a1a;border-color:#8a1a1a;background:rgba(138,26,26,0.08);
+  animation:keyPulse 2.5s infinite;
+}
+@keyframes keyPulse{0%,100%{box-shadow:0 0 0 0 rgba(138,26,26,0)}60%{box-shadow:0 0 0 3px rgba(138,26,26,0.18)}}
+.stamp-herring{
+  color:#3a2828;border-color:#3a2828;background:rgba(0,0,0,0.1);
+  text-decoration:line-through;text-decoration-thickness:2px;
+}
+
+/* ── Clue name ── */
+.ev-card-name{font-family:'Special Elite',monospace;font-size:14px;color:var(--ink);margin-bottom:10px;position:relative;z-index:2}
+.ev-card-name input{
+  background:transparent;border:none;border-bottom:1px dashed rgba(0,0,0,0.22);
+  font-family:'Special Elite',monospace;font-size:14px;color:var(--ink);width:100%;outline:none;
+}
+
+/* ── REDACTED / LOCKED description ── */
+.ev-locked-bar{
+  background:#0a0810;
+  border:1px solid #1a1228;
+  padding:10px 12px;
+  text-align:center;
+  cursor:pointer;
+  margin-bottom:9px;
+  position:relative;z-index:2;
+  transition:background 0.2s,box-shadow 0.2s;
+  user-select:none;
+}
+.ev-locked-bar:hover{
+  background:#110d1c;
+  box-shadow:0 0 12px rgba(107,63,160,0.25);
+}
+.ev-locked-text{
+  font-family:'Courier Prime',monospace;
+  font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
+  color:#4a3060;
+  line-height:1.6;
+}
+.ev-locked-icon{font-size:16px;display:block;margin-bottom:4px;filter:brightness(0.5)}
+.ev-locked-cost{font-size:8px;color:#2e1e40;letter-spacing:0.12em;margin-top:3px}
+/* Scan-line over locked bar */
+.ev-locked-bar::after{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(107,63,160,0.04) 3px,rgba(107,63,160,0.04) 4px);
+  pointer-events:none;
+}
+
+/* Revealed description */
+.ev-desc-revealed{
+  position:relative;z-index:2;
+  margin-bottom:9px;
+  animation:descReveal 0.4s ease;
+}
+@keyframes descReveal{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* ── Common field styles ── */
+.ev-field{margin-bottom:8px;position:relative;z-index:2}
+.ev-fl{font-family:'Courier Prime',monospace;font-size:7.5px;letter-spacing:0.22em;text-transform:uppercase;color:#6a5038;margin-bottom:3px}
+.ev-field textarea,.ev-field input[type=text]{
+  width:100%;background:rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.12);border-radius:2px;
+  padding:4px 7px;font-family:'Courier Prime',monospace;font-size:10px;color:var(--ink2);
+  resize:none;outline:none;line-height:1.4;
+}
+.ev-field textarea:focus,.ev-field input[type=text]:focus{background:rgba(0,0,0,0.1);border-color:rgba(107,63,160,0.3)}
+.ev-field textarea{height:44px}
+
+/* ── Status buttons ── */
+.ev-status-btns{display:flex;gap:4px;margin-bottom:9px;position:relative;z-index:2}
+.ev-s-btn{
+  flex:1;font-family:'Courier Prime',monospace;font-size:7px;letter-spacing:0.08em;
+  padding:5px 2px;border:1px solid #3a2818;background:transparent;
+  color:#5a4030;cursor:pointer;text-transform:uppercase;transition:all 0.15s;
+}
+.ev-s-btn:hover{background:rgba(0,0,0,0.1);color:#8a6848}
+.ev-s-btn.au{background:rgba(0,0,0,0.12);color:#9a8050;border-color:#6a4820}
+.ev-s-btn.ak{background:rgba(100,20,20,0.14);color:#aa3030;border-color:#7a1818}
+.ev-s-btn.ah{background:rgba(0,0,0,0.14);color:#6a5040;border-color:#3a2828}
+.ev-s-btn:disabled{opacity:0.3;cursor:not-allowed}
+
+/* ── Suspect link section (only shown when examined) ── */
+.ev-link-wrap{position:relative;z-index:2;margin-bottom:9px}
+.ev-link-lbl{font-family:'Courier Prime',monospace;font-size:7.5px;letter-spacing:0.2em;text-transform:uppercase;color:#6a5038;margin-bottom:5px}
+.ev-link-list{display:flex;flex-direction:column;gap:3px;max-height:72px;overflow-y:auto;padding-right:2px}
+.ev-link-list::-webkit-scrollbar{width:3px}
+.ev-link-list::-webkit-scrollbar-thumb{background:#3a2818}
+.ev-link-item{display:flex;align-items:center;gap:6px;font-size:9.5px;font-family:'Courier Prime',monospace;color:#4a3820;cursor:pointer}
+.ev-link-item input[type=checkbox]{width:11px;height:11px;accent-color:var(--purple);cursor:pointer;flex-shrink:0}
+.ev-link-none{font-size:9.5px;font-family:'Courier Prime',monospace;color:#3a2818;font-style:italic}
+
+/* ── Card bottom row ── */
+.ev-actions{display:flex;justify-content:flex-end;position:relative;z-index:2}
+.ev-rm-btn{padding:4px 10px;background:transparent;color:#7a5838;border:1px solid #3a2818;font-family:'Special Elite',monospace;font-size:10px;cursor:pointer;transition:all 0.2s}
+.ev-rm-btn:hover{color:#aa3030;border-color:#6a1818}
+
+/* ── Token flash ── */
+#token-flash{
+  position:fixed;inset:0;z-index:7000;pointer-events:none;
+  display:flex;align-items:center;justify-content:center;
+}
+.token-flash-msg{
+  font-family:'Special Elite',monospace;font-size:clamp(16px,3vw,28px);
+  color:rgba(180,160,90,0);letter-spacing:0.12em;text-align:center;
+  text-shadow:0 0 20px rgba(138,106,40,0.5);
+}
+#token-flash.active{animation:tokenAnim 0.8s forwards}
+@keyframes tokenAnim{0%{background:rgba(138,106,40,0)}15%{background:rgba(138,106,40,0.12)}80%{background:rgba(138,106,40,0)}100%{background:rgba(138,106,40,0)}}
+#token-flash.active .token-flash-msg{animation:tokenMsg 0.8s forwards}
+@keyframes tokenMsg{0%{color:rgba(180,160,90,0)}20%{color:rgba(180,160,90,0.85)}70%{color:rgba(180,160,90,0.7)}100%{color:rgba(180,160,90,0)}}
+
+/* ── No-tokens overlay ── */
+#no-tokens-msg{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+  z-index:7500;pointer-events:none;
+  font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:0.15em;
+  color:#7a2020;background:#0a0608;border:1px solid #3a1010;
+  padding:8px 20px;opacity:0;transition:opacity 0.3s;
+  white-space:nowrap;
+}
+#no-tokens-msg.show{opacity:1}
+
+/* ═══════════════════════════════════════════════
+   LAST KNOWN EVENTS PANEL
+═══════════════════════════════════════════════ */
+#panel-events{
+  background:
+    radial-gradient(ellipse at 50% 0%,#0e0c16 0%,transparent 60%),
+    radial-gradient(ellipse at 0% 100%,#0c0a10 0%,transparent 55%),
+    #080610;
+  min-height:calc(100vh - 200px);
+}
+
+/* ── Add-event bar at top ── */
+.tl-add-bar{
+  max-width:740px;margin:0 auto;
+  padding:24px 32px 0;
+  display:flex;gap:10px;align-items:flex-end;
+}
+.tl-add-fields{
+  display:flex;gap:8px;flex:1;flex-wrap:wrap;
+}
+.tl-add-field{display:flex;flex-direction:column;gap:4px}
+.tl-add-label{
+  font-family:'Courier Prime',monospace;font-size:7.5px;
+  letter-spacing:0.22em;text-transform:uppercase;color:#2e2040;
+}
+.tl-add-input{
+  font-family:'Courier Prime',monospace;font-size:11px;
+  background:#0d0a14;border:1px solid #1e1530;
+  color:#7a6890;padding:6px 10px;outline:none;
+  transition:border-color 0.2s,color 0.2s;
+  letter-spacing:0.06em;
+}
+.tl-add-input:focus{border-color:#3a2060;color:#aa9ac0}
+.tl-add-input.wide{min-width:340px}
+.tl-add-input.narrow{min-width:160px}
+.tl-add-btn{
+  font-family:'Special Elite',monospace;font-size:11px;
+  letter-spacing:0.12em;text-transform:uppercase;
+  padding:7px 18px;border:1px solid #2a1a40;
+  background:transparent;color:#5a4070;
+  cursor:pointer;transition:all 0.2s;white-space:nowrap;
+  align-self:flex-end;
+}
+.tl-add-btn:hover{background:#160c28;color:#9a70c0;border-color:#5a2a80;box-shadow:0 0 10px var(--purple-glow)}
+
+/* ── Log header strip ── */
+.tl-log-header{
+  max-width:740px;margin:18px auto 0;padding:0 32px;
+  display:flex;align-items:center;gap:16px;
+}
+.tl-log-title{
+  font-family:'Courier Prime',monospace;font-size:9px;
+  letter-spacing:0.3em;text-transform:uppercase;color:#2a1a38;
+}
+.tl-log-line{flex:1;height:1px;background:linear-gradient(to right,#1e1430,transparent)}
+.tl-log-count{
+  font-family:'Courier Prime',monospace;font-size:9px;
+  letter-spacing:0.2em;color:#2a1a38;
+}
+
+/* ── Outer timeline container ── */
+.timeline-outer{
+  max-width:740px;margin:0 auto;
+  padding:28px 32px 80px;
+  position:relative;
+}
+
+/* The continuous purple spine */
+.tl-spine{
+  position:absolute;
+  left:55px;             /* aligns with dot centre */
+  top:0;bottom:0;
+  width:1px;
+  background:linear-gradient(
+    to bottom,
+    transparent 0%,
+    #2a1640 4%,
+    #2a1640 92%,
+    transparent 100%
+  );
+  pointer-events:none;
+}
+
+/* Empty state */
+.timeline-empty{
+  text-align:center;padding:80px 0 40px;
+  font-family:'Special Elite',monospace;color:#1a1428;
+  font-size:14px;letter-spacing:0.15em;line-height:2.2;
+}
+.timeline-empty span{display:block;font-size:40px;margin-bottom:16px;filter:grayscale(1) brightness(0.18)}
+
+/* ── Single event row ── */
+.event-entry{
+  display:flex;align-items:flex-start;gap:0;
+  margin-bottom:28px;
+  position:relative;
+  animation:entrySlideIn 0.35s ease both;
+}
+@keyframes entrySlideIn{
+  from{opacity:0;transform:translateX(-10px)}
+  to{opacity:1;transform:none}
+}
+
+/* Sequence number in gutter */
+.tl-seq{
+  font-family:'Courier Prime',monospace;font-size:8px;
+  color:#2a1a38;letter-spacing:0.08em;
+  width:32px;flex-shrink:0;
+  text-align:right;
+  padding-top:14px;
+  user-select:none;
+}
+
+/* The dot — connects card to spine */
+.tl-dot-col{
+  width:46px;flex-shrink:0;
+  display:flex;flex-direction:column;
+  align-items:center;
+  padding-top:11px;
+}
+.tl-dot{
+  width:11px;height:11px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#9060cc,#2e0c58);
+  box-shadow:0 0 0 2px #0d0a14,0 0 0 3px #2a1640,0 0 10px rgba(107,63,160,0.45);
+  flex-shrink:0;position:relative;z-index:2;
+}
+
+/* ── Event card ── */
+.tl-card{
+  flex:1;
+  background:#0f0c18;
+  border:1px solid #1a1430;
+  border-left:2px solid #2a1640;
+  padding:0;
+  box-shadow:0 4px 24px rgba(4,2,18,0.82),0 1px 6px rgba(10,6,28,0.5),inset 0 0 0 0 transparent;
+  position:relative;
+  transition:border-left-color 0.25s,box-shadow 0.25s;
+  overflow:hidden;
+}
+.tl-card:hover{
+  border-left-color:#5a2a90;
+  box-shadow:0 6px 32px rgba(4,2,18,0.9),-2px 0 14px rgba(90,42,144,0.2),0 0 8px rgba(20,10,48,0.3);
+}
+/* Scan-line texture on card */
+.tl-card::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(
+    0deg,transparent,transparent 3px,
+    rgba(107,63,160,0.018) 3px,rgba(107,63,160,0.018) 4px
+  );
+}
+
+/* Timestamp header band */
+.tl-timestamp-row{
+  display:flex;align-items:center;justify-content:space-between;
+  background:#0a0812;
+  border-bottom:1px solid #160e28;
+  padding:8px 14px 7px;
+  position:relative;z-index:2;
+  gap:8px;
+}
+.tl-ts-icon{font-size:11px;opacity:0.4;flex-shrink:0}
+.tl-timestamp{
+  font-family:'Courier Prime',monospace;font-size:12px;
+  color:#5a3878;letter-spacing:0.12em;
+  background:transparent;border:none;outline:none;
+  flex:1;
+  transition:color 0.2s;
+}
+.tl-timestamp:focus{color:#9a68c8}
+.tl-timestamp::placeholder{color:#2a1840;letter-spacing:0.1em}
+
+/* Log entry number badge */
+.tl-log-ref{
+  font-family:'Courier Prime',monospace;font-size:7.5px;
+  color:#221638;letter-spacing:0.18em;
+  white-space:nowrap;flex-shrink:0;
+}
+
+/* Description body */
+.tl-desc-wrap{
+  padding:10px 14px 6px;
+  position:relative;z-index:2;
+}
+.tl-desc{
+  width:100%;
+  background:transparent;
+  border:none;
+  border-bottom:1px solid #160e28;
+  font-family:'Courier Prime',monospace;
+  font-size:11.5px;line-height:1.7;
+  color:#5a5070;
+  resize:none;outline:none;
+  min-height:54px;
+  transition:color 0.2s,border-color 0.2s;
+  letter-spacing:0.02em;
+}
+.tl-desc:focus{color:#8a7898;border-bottom-color:#2a1848}
+.tl-desc::placeholder{color:#1e1630;font-style:italic}
+
+/* Footer row */
+.tl-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 14px 8px;
+  position:relative;z-index:2;
+}
+.tl-status-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:#1e1430;
+  transition:background 0.3s;
+}
+.tl-card:hover .tl-status-dot{background:#4a2870}
+.tl-rm{
+  font-family:'Courier Prime',monospace;font-size:8px;
+  letter-spacing:0.15em;text-transform:uppercase;
+  padding:3px 9px;background:transparent;
+  color:#2a1828;border:1px solid #1a1020;
+  cursor:pointer;transition:all 0.2s;
+}
+.tl-rm:hover{color:#8a2020;border-color:#4a1010}
+
+/* "ADD EVENT" as in-flow last card affordance */
+.tl-add-ghost{
+  display:flex;align-items:center;gap:0;
+  margin-bottom:0;opacity:0.35;
+  pointer-events:none;
+}
+.tl-add-ghost .tl-dot{
+  background:#1a1028;
+  box-shadow:0 0 0 2px #0d0a14,0 0 0 3px #180e28;
+}
+.tl-add-ghost .tl-card{
+  border-style:dashed;
+  border-color:#180e28;
+  background:transparent;
+}
+.tl-add-ghost .tl-timestamp-row{background:transparent}
+.tl-ghost-text{
+  font-family:'Courier Prime',monospace;font-size:10px;
+  color:#1e1428;letter-spacing:0.15em;
+  padding:10px 14px;
+}
+
+/* ═══════════════════════════════════════════════
+   ENDINGS — CINEMATIC
+═══════════════════════════════════════════════ */
+
+/* ── Shared overlay ── */
+#ending-overlay{
+  position:fixed;inset:0;z-index:9000;
+  display:none;align-items:center;justify-content:center;
+  background:#000;pointer-events:none;opacity:0;
+  flex-direction:column;
+  overflow:hidden;
+}
+#ending-overlay.active{
+  display:flex;pointer-events:all;
+}
+
+/* ════════════════════
+   CASE CLOSED
+════════════════════ */
+#ending-overlay.ending-closed{
+  background:#000;
+  cursor:default;
+}
+
+/* The stamp itself */
+.cc-stamp-outer{
+  text-align:center;
+  opacity:0;
+  position:relative;
+}
+.ending-closed .cc-stamp-outer{
+  animation:ccFadeIn 0.01s 2s forwards; /* just makes it visible; stamp animation runs via JS */
+}
+@keyframes ccFadeIn{to{opacity:1}}
+
+.cc-stamp-box{
+  display:inline-block;
+  border:7px solid #8a1010;
+  padding:14px 44px 18px;
+  position:relative;
+  transform:scale(0) rotate(-6deg);
+  transform-origin:center;
+}
+/* Red grain texture on stamp box */
+.cc-stamp-box::after{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    0deg,transparent,transparent 2px,
+    rgba(139,16,16,0.06) 2px,rgba(139,16,16,0.06) 3px
+  );
+  pointer-events:none;
+}
+.cc-stamp-word{
+  font-family:'Special Elite',monospace;
+  font-size:clamp(52px,11vw,108px);
+  line-height:0.9;
+  display:block;
+  color:transparent;
+  -webkit-text-stroke:3px #8a1010;
+  letter-spacing:0.08em;
+  text-shadow:0 0 30px rgba(139,16,16,0.25);
+}
+
+/* Culprit name in gold */
+.cc-culprit{
+  font-family:'Special Elite',monospace;
+  font-size:clamp(16px,3vw,28px);
+  color:#8a6820;
+  letter-spacing:0.2em;
+  margin-top:22px;
+  opacity:0;
+  text-shadow:0 0 20px rgba(138,104,32,0.3);
+}
+
+/* Motive — word-by-word */
+.cc-motive{
+  font-family:'IM Fell English',serif;
+  font-style:italic;
+  font-size:clamp(12px,1.8vw,17px);
+  color:#3a2828;
+  line-height:1.75;
+  max-width:520px;
+  text-align:center;
+  margin-top:18px;
+  letter-spacing:0.02em;
+  min-height:1.75em;
+  opacity:0;
+}
+.cc-motive .mword{
+  opacity:0;
+  display:inline;
+}
+
+/* Stats line */
+.cc-stats{
+  font-family:'Courier Prime',monospace;
+  font-size:10px;
+  color:#2a1e1e;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  margin-top:22px;
+  opacity:0;
+  line-height:1.9;
+  text-align:center;
+}
+
+/* Back to board button */
+.cc-back-btn{
+  margin-top:28px;
+  font-family:'Special Elite',monospace;
+  font-size:11px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  padding:9px 26px;
+  background:transparent;
+  color:#3a1818;
+  border:1px solid #2a1010;
+  cursor:pointer;
+  opacity:0;
+  transition:color 0.2s,border-color 0.2s,box-shadow 0.2s;
+}
+.cc-back-btn:hover{
+  color:#8a4020;
+  border-color:#5a1818;
+  box-shadow:0 0 12px rgba(139,40,20,0.2);
+}
+
+/* ════════════════════
+   WRONG ARREST
+════════════════════ */
+#wrong-flash{
+  position:fixed;inset:0;z-index:8000;pointer-events:none;
+  background:rgba(240,240,255,0);
+  display:flex;align-items:center;justify-content:center;
+}
+#wrong-flash.active{animation:wrongFlash 2.4s forwards}
+@keyframes wrongFlash{
+  0%  {background:rgba(220,225,255,0)}
+  6%  {background:rgba(220,225,255,0.88)}
+  14% {background:rgba(220,225,255,0.72)}
+  28% {background:rgba(220,225,255,0.1)}
+  100%{background:rgba(220,225,255,0)}
+}
+.wrong-msg-inner{
+  text-align:center;opacity:0;
+}
+#wrong-flash.active .wrong-msg-inner{animation:wrongMsgIn 2.4s forwards}
+@keyframes wrongMsgIn{
+  0%  {opacity:0;transform:none}
+  10% {opacity:1;transform:none}
+  60% {opacity:1}
+  100%{opacity:0}
+}
+.wrong-line1{
+  font-family:'Courier Prime',monospace;
+  font-size:clamp(20px,4vw,42px);
+  color:#0a0810;
+  letter-spacing:0.06em;
+  display:block;
+  font-weight:700;
+}
+.wrong-line2{
+  font-family:'IM Fell English',serif;
+  font-style:italic;
+  font-size:clamp(13px,2.2vw,22px);
+  color:#2a2038;
+  letter-spacing:0.05em;
+  display:block;
+  margin-top:10px;
+}
+.wrong-tokens-left{
+  font-family:'Courier Prime',monospace;
+  font-size:10px;
+  color:#3a2848;
+  letter-spacing:0.2em;
+  display:block;
+  margin-top:16px;
+  text-transform:uppercase;
+}
+
+/* ════════════════════
+   CASE COLD
+════════════════════ */
+#ending-overlay.ending-cold{
+  background:#0a0a0c;
+  cursor:default;
+}
+.cold-outer{
+  text-align:center;
+  max-width:600px;
+  padding:0 20px;
+}
+/* Letter-by-letter title */
+.cold-title-wrap{
+  margin-bottom:28px;
+}
+.cold-letter{
+  font-family:'Special Elite',monospace;
+  font-size:clamp(44px,10vw,96px);
+  color:#161620;
+  letter-spacing:0.15em;
+  display:inline-block;
+  opacity:0;
+  text-shadow:0 0 40px rgba(30,30,60,0.4);
+}
+.cold-divider{
+  width:0;height:1px;
+  background:linear-gradient(to right,transparent,#1e1830,transparent);
+  margin:0 auto 28px;
+  transition:width 1s ease;
+}
+.cold-trail{
+  font-family:'Courier Prime',monospace;
+  font-size:clamp(11px,1.8vw,15px);
+  color:#161620;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  opacity:0;
+  line-height:2;
+}
+.cold-culprit-reveal{
+  font-family:'IM Fell English',serif;
+  font-style:italic;
+  font-size:clamp(13px,2vw,19px);
+  color:#1a1828;
+  opacity:0;
+  margin-top:20px;
+  letter-spacing:0.06em;
+  line-height:1.7;
+}
+.cold-coda{
+  font-family:'Courier Prime',monospace;
+  font-size:9px;
+  color:#0e0c14;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  opacity:0;
+  margin-top:32px;
+}
+.cold-back-btn{
+  margin-top:32px;
+  font-family:'Special Elite',monospace;
+  font-size:10px;letter-spacing:0.18em;text-transform:uppercase;
+  padding:8px 22px;background:transparent;
+  color:#1a1428;border:1px solid #150e20;
+  cursor:pointer;opacity:0;
+  transition:color 0.2s,border-color 0.2s;
+}
+.cold-back-btn:hover{color:#3a2848;border-color:#2a1840}
+
+/* ═══════════════════════════════════════════════
+   GM SETUP SYSTEM
+═══════════════════════════════════════════════ */
+
+/* ── Hidden GM trigger button ── */
+#gm-btn{
+  position:fixed;bottom:14px;right:16px;z-index:600;
+  font-family:'Courier Prime',monospace;font-size:9px;
+  letter-spacing:0.12em;
+  padding:5px 10px;
+  background:rgba(10,8,16,0.6);
+  color:#1e1428;
+  border:1px solid #180e28;
+  cursor:pointer;
+  user-select:none;
+  transition:color 0.3s,border-color 0.3s,background 0.3s;
+  backdrop-filter:blur(2px);
+}
+#gm-btn:hover{color:#3a2050;border-color:#2a1640}
+#gm-btn.hidden{opacity:0;pointer-events:none}
+/* Long-press visual feedback */
+#gm-btn.pressing{
+  color:#5a3080;border-color:#3a1a60;
+  box-shadow:0 0 0 0 rgba(107,63,160,0);
+  animation:gmPressRing 3s linear forwards;
+}
+@keyframes gmPressRing{
+  0%{box-shadow:0 0 0 0 rgba(107,63,160,0.5)}
+  100%{box-shadow:0 0 0 8px rgba(107,63,160,0)}
+}
+
+/* ── GM password gate ── */
+#gm-gate{
+  position:fixed;inset:0;z-index:1500;
+  background:rgba(2,1,6,0.98);
+  display:none;align-items:center;justify-content:center;
+  flex-direction:column;gap:20px;
+  backdrop-filter:blur(8px);
+}
+#gm-gate.open{display:flex}
+.gate-label{
+  font-family:'Courier Prime',monospace;font-size:10px;
+  letter-spacing:0.3em;text-transform:uppercase;color:#2a1840;
+}
+.gate-title{
+  font-family:'Special Elite',monospace;font-size:22px;
+  color:#3a2050;letter-spacing:0.15em;
+}
+.gate-input{
+  font-family:'Courier Prime',monospace;font-size:16px;
+  letter-spacing:0.3em;text-align:center;
+  background:transparent;
+  border:none;border-bottom:1px solid #2a1640;
+  color:#6a40a0;outline:none;padding:8px 12px;
+  width:220px;
+  transition:border-color 0.2s;
+}
+.gate-input:focus{border-bottom-color:#5a2a90}
+.gate-input.shake{animation:gateShake 0.4s ease}
+@keyframes gateShake{0%,100%{transform:none}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.gate-err{
+  font-family:'Courier Prime',monospace;font-size:9px;
+  letter-spacing:0.18em;color:#5a1818;
+  opacity:0;transition:opacity 0.3s;
+}
+.gate-err.show{opacity:1}
+.gate-enter{
+  font-family:'Special Elite',monospace;font-size:11px;
+  letter-spacing:0.15em;padding:8px 24px;
+  background:var(--purple-dim);color:#9060c0;
+  border:1px solid var(--purple);cursor:pointer;
+  transition:all 0.2s;text-transform:uppercase;
+}
+.gate-enter:hover{background:var(--purple);color:#e0c0f8}
+.gate-cancel{
+  font-family:'Courier Prime',monospace;font-size:9px;
+  letter-spacing:0.15em;color:#1e1428;
+  background:transparent;border:none;cursor:pointer;
+  text-transform:uppercase;transition:color 0.2s;
+}
+.gate-cancel:hover{color:#3a2050}
+
+/* ── Full GM Panel ── */
+#gm-panel{
+  position:fixed;inset:0;z-index:1400;
+  background:#06040e;
+  display:none;overflow-y:auto;
+}
+#gm-panel.open{display:block}
+
+.gm-panel-inner{
+  max-width:860px;margin:0 auto;
+  padding:32px 28px 80px;
+}
+
+/* GM header */
+.gm-header{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  border-bottom:1px solid #1a1030;
+  padding-bottom:18px;margin-bottom:28px;
+  flex-wrap:wrap;gap:12px;
+}
+.gm-title-block{}
+.gm-eyebrow{
+  font-family:'Courier Prime',monospace;font-size:8px;
+  letter-spacing:0.3em;text-transform:uppercase;color:#2e1a48;
+  margin-bottom:4px;
+}
+.gm-title{
+  font-family:'Special Elite',monospace;font-size:24px;
+  color:#6a40a0;letter-spacing:0.1em;
+}
+.gm-sub{
+  font-family:'Courier Prime',monospace;font-size:9px;
+  color:#2a1840;letter-spacing:0.12em;margin-top:4px;
+}
+.gm-header-btns{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.gm-lock-btn{
+  font-family:'Special Elite',monospace;font-size:11px;
+  letter-spacing:0.15em;padding:9px 22px;
+  background:#1a0830;color:#8a50c0;
+  border:1px solid #3a1860;cursor:pointer;
+  transition:all 0.2s;text-transform:uppercase;
+}
+.gm-lock-btn:hover{background:#2a1050;color:#c080f0;border-color:#6a2a90;box-shadow:0 0 14px rgba(107,63,160,0.3)}
+.gm-close-btn{
+  font-family:'Courier Prime',monospace;font-size:9px;
+  letter-spacing:0.12em;padding:9px 16px;
+  background:transparent;color:#2a1840;
+  border:1px solid #180e28;cursor:pointer;
+  transition:all 0.2s;text-transform:uppercase;
+}
+.gm-close-btn:hover{color:#4a2860;border-color:#2a1640}
+
+/* GM sections */
+.gm-section{
+  margin-bottom:32px;
+  border:1px solid #120a20;
+  background:#080612;
+}
+.gm-section-head{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;
+  background:#0c0818;
+  border-bottom:1px solid #140a22;
+}
+.gm-section-icon{font-size:14px;opacity:0.6}
+.gm-section-title{
+  font-family:'Courier Prime',monospace;font-size:9px;
+  letter-spacing:0.25em;text-transform:uppercase;color:#3a2050;
+}
+.gm-section-body{padding:18px 16px}
+
+/* Culprit dropdown */
+.gm-field{margin-bottom:14px}
+.gm-fl{
+  font-family:'Courier Prime',monospace;font-size:8px;
+  letter-spacing:0.2em;text-transform:uppercase;color:#3a2848;margin-bottom:5px;
+}
+.gm-select{
+  width:100%;background:#0c0818;border:1px solid #1e1230;
+  font-family:'Courier Prime',monospace;font-size:11px;
+  color:#6a4888;padding:7px 10px;outline:none;
+  cursor:pointer;transition:border-color 0.2s;
+  -webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%233a2050'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;
+  padding-right:28px;
+}
+.gm-select:focus{border-color:#3a1860}
+.gm-input,.gm-textarea{
+  width:100%;background:#0c0818;border:1px solid #1e1230;
+  font-family:'Courier Prime',monospace;font-size:11px;
+  color:#7a6090;padding:7px 10px;outline:none;
+  line-height:1.5;resize:none;
+  transition:border-color 0.2s,color 0.2s;
+}
+.gm-input:focus,.gm-textarea:focus{border-color:#3a1860;color:#a090c0}
+.gm-textarea{height:62px}
+.gm-input::placeholder,.gm-textarea::placeholder{color:#1e1230;font-style:italic}
+
+/* Suspect rows in GM panel */
+.gm-suspect-block{
+  margin-bottom:20px;
+  padding:14px;
+  background:#0a0614;
+  border:1px solid #160a28;
+  position:relative;
+}
+.gm-suspect-block:last-child{margin-bottom:0}
+.gm-suspect-name{
+  font-family:'Special Elite',monospace;font-size:13px;
+  color:#5a3870;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.gm-suspect-name .gm-emo{font-size:16px}
+.gm-two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:540px){.gm-two-col{grid-template-columns:1fr}}
+
+/* Clue rows in GM panel */
+.gm-clue-row{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 0;border-bottom:1px solid #0e0818;
+  cursor:pointer;transition:background 0.15s;
+}
+.gm-clue-row:last-child{border-bottom:none}
+.gm-clue-row:hover{background:rgba(107,63,160,0.04)}
+.gm-clue-check{
+  width:14px;height:14px;flex-shrink:0;
+  accent-color:#6b3fa0;cursor:pointer;
+}
+.gm-clue-name{
+  font-family:'Courier Prime',monospace;font-size:10px;
+  color:#4a3060;flex:1;line-height:1.4;
+}
+.gm-clue-row.ticked .gm-clue-name{color:#7a50a0}
+
+/* Motive field */
+.gm-motive-wrap{
+  background:#0a0614;border:1px solid #160a28;
+  padding:14px;
+}
+
+/* Warning banner at top of GM panel */
+.gm-warning{
+  display:flex;align-items:center;gap:10px;
+  background:#100818;border:1px solid #2a1040;
+  padding:10px 14px;margin-bottom:24px;
+}
+.gm-warning-icon{font-size:14px;flex-shrink:0;opacity:0.7}
+.gm-warning-text{
+  font-family:'Courier Prime',monospace;font-size:9px;
+  color:#3a2050;letter-spacing:0.1em;line-height:1.6;
+}
+
+/* Per-suspect ⚙ button on card — keep from old system */
+.c-btn-setup{color:#3a2450;border-color:#1e1030}
+.c-btn-setup:hover{color:#6a40a0;border-color:#3a1860;background:rgba(107,63,160,0.08)}
+
+/* Guilty flag (hidden on card) */
+.guilty-marker{display:none}
+
+/* motive reveal handled by JS word-by-word */
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#080610}
+::-webkit-scrollbar-thumb{background:#1e1428}
+::-webkit-scrollbar-thumb:hover{background:#2e2048}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     MISSING PERSON BANNER
+══════════════════════════════════════════ -->
+<div id="missing-banner">
+  <div class="banner-inner">
+    <div class="missing-stamp">⚠ MISSING</div>
+    <div style="position:relative">
+      <div class="banner-photo" id="banner-photo-btn" onclick="togglePhotoPicker()" title="Click to change">
+        <span id="mp-emoji">👧</span>
+        <span class="banner-photo-hint">▸ change</span>
+      </div>
+      <div class="photo-picker" id="photo-picker">
+        <!-- filled by JS -->
+      </div>
+    </div>
+    <div class="banner-fields">
+      <div class="bfield wide">
+        <div class="bfield-label">Full Name</div>
+        <input type="text" id="mp-name" placeholder="UNKNOWN" value="Elara Voss" />
+      </div>
+      <div class="bfield">
+        <div class="bfield-label">Age</div>
+        <input type="text" id="mp-age" placeholder="—" value="16" style="min-width:50px;max-width:60px"/>
+      </div>
+      <div class="bfield">
+        <div class="bfield-label">Last Seen Location</div>
+        <input type="text" id="mp-location" placeholder="Unknown" value="Dunmore Village Bus Stop" style="min-width:180px"/>
+      </div>
+      <div class="bfield">
+        <div class="bfield-label">Last Seen Date</div>
+        <input type="text" id="mp-date" placeholder="——/——/——" value="Thursday 14th November, 9:02 PM"/>
+      </div>
+      <div class="bfield wide">
+        <div class="bfield-label">Description</div>
+        <textarea id="mp-desc" placeholder="Physical description, clothing, circumstances...">Dark coat, red scarf. Carrying a library book she never returned. Last seen alone at the bus stop.</textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CASE NAME
+══════════════════════════════════════════ -->
+<div id="case-name-bar">
+  <input type="text" id="case-name-input" value="THE DISAPPEARANCE OF ELARA VOSS" />
+</div>
+
+<!-- ══════════════════════════════════════════
+     HUD
+══════════════════════════════════════════ -->
+<div id="hud">
+  <div class="hud-block">
+    <div class="hud-label">Case Open</div>
+    <div id="hud-timer">00:00:00</div>
+  </div>
+  <div class="hud-sep"></div>
+  <div class="hud-block">
+    <div class="hud-label">Exam Tokens</div>
+    <div id="hud-tokens" class="hud-value">🔍🔍🔍🔍🔍</div>
+  </div>
+  <div class="hud-sep"></div>
+  <div class="hud-block">
+    <div class="hud-label">Arrest Attempts</div>
+    <div id="hud-arrests" class="hud-value">🔴🔴🔴</div>
+  </div>
+  <div class="hud-sep"></div>
+  <div class="confidence-wrap">
+    <div class="hud-label">Confidence</div>
+    <div class="confidence-bar-outer"><div class="confidence-bar-inner" id="conf-bar"></div></div>
+    <div id="confidence-pct">0%</div>
+  </div>
+  <div class="hud-sep"></div>
+  <div class="hud-block">
+    <button id="notes-btn" onclick="toggleNotes()" title="Open case notes scratchpad">&#128221; Case Notes</button>
+  </div>
+  <div id="hud-message">The case is open. Somewhere, someone knows the truth.</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TABS
+══════════════════════════════════════════ -->
+<div id="tab-bar">
+  <div class="tab active" id="tab-suspects" onclick="switchTab('suspects')">🕵 Suspects <span class="tab-badge" id="badge-suspects">0</span></div>
+  <div class="tab" id="tab-evidence" onclick="switchTab('evidence')">🔎 Evidence <span class="tab-badge" id="badge-evidence">0</span></div>
+  <div class="tab" id="tab-events" onclick="switchTab('events')">📋 Last Known Events <span class="tab-badge" id="badge-events">0</span></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SUSPECTS PANEL
+══════════════════════════════════════════ -->
+<div class="panel active" id="panel-suspects">
+  <div class="toolbar">
+    <span class="toolbar-label">▴ Suspects Board</span>
+    <button class="btn btn-add" onclick="addSuspect()">+ Pin Suspect</button>
+    <span class="toolbar-label" style="color:#1e1428;font-size:9px">|</span>
+    <span class="toolbar-label" style="font-size:9px;color:#2a1a38">Drag cards &nbsp;·&nbsp; Click emoji to change &nbsp;·&nbsp; Use Setup to write interrogation response &nbsp;·&nbsp; Each suspect can be interrogated twice</span>
+  </div>
+  <div id="board">
+    <div class="board-empty" id="board-empty">
+      <span class="big-icon">🕵</span>
+      <p>No suspects yet.<br>Someone is hiding something.<br>Start pinning.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     EVIDENCE PANEL
+══════════════════════════════════════════ -->
+<div class="panel" id="panel-evidence">
+  <div class="ev-stats-bar" id="ev-stats-bar">
+    <div class="ev-stat st">Total <span id="st-total">0</span></div>
+    <div class="ev-stat sk">Key Evidence <span id="st-key">0</span></div>
+    <div class="ev-stat su">Unexamined <span id="st-unex">0</span></div>
+    <div class="ev-stat sl">Examined <span id="st-exam">0</span></div>
+    <div class="ev-stat sh">Red Herrings <span id="st-herr">0</span></div>
+  </div>
+  <div class="toolbar">
+    <span class="toolbar-label">&#9652; Evidence Board</span>
+    <button class="btn btn-add" onclick="addEvidence()">+ Add Clue</button>
+    <span class="toolbar-label" style="color:#1e1428;font-size:9px">|</span>
+    <span class="toolbar-label" style="font-size:9px;color:#2a1a38">All clues start locked &nbsp;&middot;&nbsp; Tap CLASSIFIED bar to examine (costs one token) &nbsp;&middot;&nbsp; Link examined clues to suspects</span>
+  </div>
+  <div class="evidence-board" id="evidence-board">
+    <div class="ev-empty" id="ev-empty">
+      <span>&#129514;</span>
+      <p>No clues logged yet.<br>Every detail is a thread.<br>Add the first clue.</p>
+    </div>
+  </div>
+</div>
+<div id="cam-flash"></div>
+<div id="token-flash"><div class="token-flash-msg" id="token-flash-msg"></div></div>
+<div id="no-tokens-msg">NO EXAMINATION TOKENS REMAINING</div>
+
+<!-- Case Notes panel -->
+<div id="notes-panel">
+  <div class="notes-header">
+    <span class="notes-header-label">&#9632; Detective's Case Notes</span>
+    <button class="notes-close" onclick="toggleNotes()">&#10005;</button>
+  </div>
+  <textarea id="notes-textarea" placeholder="Running theory, suspicions, patterns you're tracking...&#10;&#10;No one else will see this."></textarea>
+  <div class="notes-footer">
+    <span class="notes-saved" id="notes-saved">Unsaved</span>
+    <span class="notes-char-count" id="notes-char-count">0 chars</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     EVENTS PANEL
+══════════════════════════════════════════ -->
+<div class="panel" id="panel-events">
+
+  <!-- Quick-add bar -->
+  <div class="tl-add-bar">
+    <div class="tl-add-fields">
+      <div class="tl-add-field">
+        <div class="tl-add-label">Timestamp</div>
+        <input class="tl-add-input narrow" id="tl-new-time" type="text" placeholder="e.g. 11:47 PM — Thursday" />
+      </div>
+      <div class="tl-add-field" style="flex:1">
+        <div class="tl-add-label">Description</div>
+        <input class="tl-add-input wide" id="tl-new-desc" type="text" placeholder="What happened..." />
+      </div>
+    </div>
+    <button class="tl-add-btn" onclick="addEventFromBar()">+ Log Entry</button>
+  </div>
+
+  <!-- Log header -->
+  <div class="tl-log-header">
+    <div class="tl-log-title">&#9632; INCIDENT LOG — CHRONOLOGICAL</div>
+    <div class="tl-log-line"></div>
+    <div class="tl-log-count" id="tl-count">0 ENTRIES</div>
+  </div>
+
+  <!-- Timeline body -->
+  <div class="timeline-outer" id="timeline-outer">
+    <div class="tl-spine" id="tl-spine"></div>
+    <div class="timeline-empty" id="timeline-empty">
+      <span>&#128336;</span>
+      <p>No entries logged.<br>Begin reconstructing the last known hours.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════
+     INTERROGATION PANEL
+══════════════════════════════════════════ -->
+<div id="interro-panel">
+  <div class="interro-inner">
+    <div class="interro-header">Interrogation Record — Case #UID-1947</div>
+    <div class="interro-name" id="interro-name">—</div>
+    <div class="interro-label">Their Statement</div>
+    <div class="interro-response" id="interro-response">—</div>
+    <div class="interro-count-note" id="interro-count-note">—</div>
+    <button class="interro-close" onclick="closeInterro()">Close Record</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SETUP MODAL
+══════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════
+     GM BUTTON (subtle, bottom-right)
+══════════════════════════════════════════ -->
+<button id="gm-btn" title="Game Master">GM &#9881;</button>
+
+<!-- ══════════════════════════════════════════
+     GM PASSWORD GATE
+══════════════════════════════════════════ -->
+<div id="gm-gate">
+  <div class="gate-label">&#9632; RESTRICTED ACCESS</div>
+  <div class="gate-title">Game Master Console</div>
+  <input class="gate-input" id="gate-pw" type="password" placeholder="&#9670; &#9670; &#9670; &#9670; &#9670; &#9670; &#9670; &#9670;" autocomplete="off" />
+  <div class="gate-err" id="gate-err">ACCESS DENIED — INCORRECT PASSPHRASE</div>
+  <button class="gate-enter" onclick="submitGate()">Enter</button>
+  <button class="gate-cancel" onclick="closeGate()">Cancel</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     FULL GM PANEL
+══════════════════════════════════════════ -->
+<div id="gm-panel">
+  <div class="gm-panel-inner">
+
+    <!-- Header -->
+    <div class="gm-header">
+      <div class="gm-title-block">
+        <div class="gm-eyebrow">&#9632; CLASSIFIED — GAME MASTER ACCESS ONLY</div>
+        <div class="gm-title">Setup Console</div>
+        <div class="gm-sub">Configure the case. The detective will see none of this.</div>
+      </div>
+      <div class="gm-header-btns">
+        <button class="gm-close-btn" onclick="closeGmPanel()">&#10005; Close</button>
+        <button class="gm-lock-btn" onclick="lockSetup()">&#128274; Lock &amp; Hand Over</button>
+      </div>
+    </div>
+
+    <div class="gm-warning">
+      <span class="gm-warning-icon">&#9888;</span>
+      <div class="gm-warning-text">
+        Everything set here is invisible to the detective.<br>
+        When you are done, click <strong style="color:#5a3080">Lock &amp; Hand Over</strong>. The GM button will vanish. To reveal it again, press and hold the bottom-right corner of the screen for 3 seconds.
+      </div>
+    </div>
+
+    <!-- 1. The Culprit -->
+    <div class="gm-section">
+      <div class="gm-section-head">
+        <span class="gm-section-icon">&#9651;</span>
+        <span class="gm-section-title">01 &mdash; The Real Culprit</span>
+      </div>
+      <div class="gm-section-body">
+        <div class="gm-field">
+          <div class="gm-fl">Select the guilty suspect (the correct arrest target)</div>
+          <select class="gm-select" id="gm-culprit-select">
+            <option value="">— None selected —</option>
+          </select>
+        </div>
+        <div class="gm-field">
+          <div class="gm-fl">True Motive (revealed only on correct arrest)</div>
+          <div class="gm-motive-wrap">
+            <textarea class="gm-textarea" id="gm-motive" placeholder="Why did they do it? This text appears in the Case Closed cinematic — the detective reads it only after solving the case."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Suspect Interrogation Responses -->
+    <div class="gm-section">
+      <div class="gm-section-head">
+        <span class="gm-section-icon">&#128483;</span>
+        <span class="gm-section-title">02 &mdash; Interrogation Responses</span>
+      </div>
+      <div class="gm-section-body">
+        <div id="gm-suspects-body">
+          <div style="font-family:'Courier Prime',monospace;font-size:9px;color:#2a1840;letter-spacing:0.15em">No suspects pinned yet. Add suspects first.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Clue Correct Links -->
+    <div class="gm-section">
+      <div class="gm-section-head">
+        <span class="gm-section-icon">&#128279;</span>
+        <span class="gm-section-title">03 &mdash; Clue Confidence Links</span>
+      </div>
+      <div class="gm-section-body">
+        <div style="font-family:'Courier Prime',monospace;font-size:8px;color:#2a1840;letter-spacing:0.12em;margin-bottom:12px;line-height:1.6">
+          Tick the clues that correctly link to the culprit. When the detective links these clues to a suspect, the Confidence Meter rises faster — without them knowing why.
+        </div>
+        <div id="gm-clues-body">
+          <div style="font-family:'Courier Prime',monospace;font-size:9px;color:#2a1840;letter-spacing:0.15em">No clues logged yet. Add evidence first.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;padding-top:8px">
+      <button class="gm-lock-btn" onclick="lockSetup()">&#128274; Lock &amp; Hand Over</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ENDINGS
+══════════════════════════════════════════ -->
+<div id="ending-overlay" onclick="dismissEnding()">
+  <!-- content injected by JS -->
+</div>
+<div id="wrong-flash">
+  <div class="wrong-msg-inner">
+    <span class="wrong-line1" id="wrong-line1">Wrong.</span>
+    <span class="wrong-line2" id="wrong-line2">They're watching you now.</span>
+    <span class="wrong-tokens-left" id="wrong-tokens-left"></span>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   STATE
+════════════════════════════════════════ */
+let suspects    = [];
+let evidences   = [];
+let events      = [];
+let cardCount   = 0;
+let evCount     = 0;
+let evtCount    = 0;
+let dragging    = null, dragOffX = 0, dragOffY = 0;
+
+let examTokens   = 5;
+let arrestsLeft  = 3;
+let confidence   = 0;
+let caseOpen     = true;
+let caseStartTime = Date.now();
+let setupTargetId = null;
+
+const TILTS  = [-4.5,-2.5,-1,0.8,2,3.2,-3,4,-1.8,2.8,-0.5,3.8];
+const EMOJIS = ['🧔','👩','🧓','👨','🧟','👤','🕵️','👁','🤵','👩‍💼','🧛','👻','🧝','🤺','🎭','🧩','💀','🕷️','🦹','🧙','🤔','😶','🙃','👁️‍🗨️','🤥'];
+const PHOTO_EMOJIS = ['👤','👩','🧔','🧓','👨','👩‍🦱','👩‍🦳','👩‍🦰','👨‍🦱','👨‍🦳','🕵️','🧝','🎭','💀','👁'];
+const WRONG_MSGS = [
+  'Wrong. They\'re watching you now.',
+  'That\'s not the one. The real killer smiles.',
+  'Incorrect. The truth slips further away.',
+  'A mistake you cannot take back.',
+  'The case grows colder.'
+];
+
+/* ════════════════════════════════════════
+   TIMER
+════════════════════════════════════════ */
+function fmtTime(ms) {
+  const s = Math.floor(ms/1000), h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
+  return [h,m,sec].map(v=>String(v).padStart(2,'0')).join(':');
+}
+setInterval(()=>{
+  if (!caseOpen) return;
+  document.getElementById('hud-timer').textContent = fmtTime(Date.now()-caseStartTime);
+},1000);
+
+/* ════════════════════════════════════════
+   TABS
+════════════════════════════════════════ */
+function switchTab(name) {
+  ['suspects','evidence','events'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active',t===name);
+    document.getElementById('panel-'+t).classList.toggle('active',t===name);
+  });
+  if (name==='evidence') refreshAllEvLinks();
+}
+
+/* ════════════════════════════════════════
+   PHOTO PICKER
+════════════════════════════════════════ */
+(function(){
+  const pp = document.getElementById('photo-picker');
+  PHOTO_EMOJIS.forEach(e=>{
+    const s=document.createElement('span');s.className='photo-opt';s.textContent=e;
+    s.onclick=()=>{document.getElementById('mp-emoji').textContent=e;pp.classList.remove('open')};
+    pp.appendChild(s);
+  });
+})();
+function togglePhotoPicker(){document.getElementById('photo-picker').classList.toggle('open')}
+
+/* ════════════════════════════════════════
+   TOKENS & ARRESTS HUD
+════════════════════════════════════════ */
+function renderHUD() {
+  document.getElementById('hud-tokens').innerHTML =
+    '🔍'.repeat(examTokens)+'<span class="token-used">'+'🔍'.repeat(5-examTokens)+'</span>';
+  document.getElementById('hud-arrests').innerHTML =
+    '🔴'.repeat(arrestsLeft)+'<span class="token-used">'+'🔴'.repeat(3-arrestsLeft)+'</span>';
+}
+function updateConfidence(val) {
+  confidence = Math.max(0, Math.min(100, val));
+  document.getElementById('conf-bar').style.width = confidence+'%';
+  document.getElementById('confidence-pct').textContent = confidence+'%';
+  // Pulsing glow at >60%
+  const barOuter = document.getElementById('conf-bar').parentElement;
+  if(confidence >= 60) barOuter.classList.add('glowing');
+  else barOuter.classList.remove('glowing');
+  const msg = document.getElementById('hud-message');
+  if (confidence >= 80) {
+    msg.textContent = "You're close. Someone is getting nervous.";
+    msg.classList.add('nervous');
+  } else if (confidence >= 50) {
+    msg.textContent = "The picture is forming. Keep pulling the threads.";
+    msg.classList.remove('nervous');
+  } else {
+    msg.textContent = "The case is open. Somewhere, someone knows the truth.";
+    msg.classList.remove('nervous');
+  }
+}
+
+/* ════════════════════════════════════════
+   SUSPECT CARDS
+════════════════════════════════════════ */
+function addSuspect(data={}) {
+  document.getElementById('board-empty').style.display='none';
+  const uid = 'susp-'+Date.now()+'-'+Math.random().toString(36).slice(2,5);
+  const tilt = TILTS[cardCount % TILTS.length];
+  cardCount++;
+  const emoji = data.emoji||'👤';
+  const suspicion = data.suspicion||0;
+  const sc = getSuspColor(suspicion);
+
+  suspects.push({id:uid,name:data.name||'',response:data.response||'',guilty:data.guilty||false,interrogated:0,status:'poi'});
+  updateBadge('suspects',suspects.length);
+
+  const wrapper = document.createElement('div');
+  wrapper.className='card-wrapper';wrapper.id=uid;
+  wrapper.style.cssText=`transform:rotate(${tilt}deg);position:relative`;
+
+  wrapper.innerHTML=`
+    <div class="suspect-pin">
+      <div class="pin-gem"></div><div class="pin-needle"></div><div class="pin-shadow"></div>
+    </div>
+    <div class="suspect-card" id="face-${uid}">
+      <div class="c-section" style="margin-bottom:8px">
+        <span class="status-badge status-poi" id="status-${uid}">◌ Person of Interest</span>
+        <div class="interro-count" id="icount-${uid}">Interrogations: <span>0 / 2</span></div>
+      </div>
+      <div class="c-section c-avatar" onclick="toggleEmojiPicker('${uid}')" title="Click to change">
+        <span id="emo-${uid}">${emoji}</span>
+      </div>
+      <div class="c-emoji-picker" id="picker-${uid}">
+        ${EMOJIS.map(e=>`<span class="c-emoji-opt" onclick="setEmo('${uid}','${e}')">${e}</span>`).join('')}
+      </div>
+      <div class="c-section c-name-wrap">
+        <input type="text" placeholder="SUSPECT NAME" value="${data.name||''}" id="sname-${uid}"
+          oninput="updateSuspectName('${uid}',this.value)" />
+      </div>
+      <div class="c-section c-field">
+        <div class="c-label">🔗 Connection</div>
+        <input type="text" placeholder="Relation to missing person..." value="${data.connection||''}" />
+      </div>
+      <div class="c-section c-field">
+        <div class="c-label">🔒 What They're Hiding</div>
+        <textarea placeholder="The thing they won't say...">${data.hiding||''}</textarea>
+      </div>
+      <div class="c-section c-field">
+        <div class="c-label">📋 Alibi</div>
+        <textarea placeholder='"I was at home alone..."'>${data.alibi||''}</textarea>
+      </div>
+      <div class="c-section susp-wrap">
+        <div class="susp-labels"><span>Innocent</span><span>Prime Suspect</span></div>
+        <div class="susp-val" id="sv-${uid}" style="color:${sc}">${getSuspLabel(suspicion)}</div>
+        <input type="range" min="0" max="100" value="${suspicion}" id="slider-${uid}"
+          oninput="updateSusp('${uid}',this.value)"
+          style="background:linear-gradient(to right,${sc} ${suspicion}%,rgba(0,0,0,0.2) ${suspicion}%)"/>
+      </div>
+      <div class="c-section c-actions">
+        <button class="c-btn c-btn-interrogate" id="ibtn-${uid}" onclick="interrogate('${uid}')">🗣 Interrogate</button>
+        <button class="c-btn c-btn-status" onclick="cycleStatus('${uid}')">◈ Status</button>
+      </div>
+      <div class="c-section c-actions" style="margin-top:5px">
+        <button class="c-btn c-btn-arrest" onclick="attemptArrest('${uid}')">⚖ Arrest</button>
+        <button class="c-btn c-btn-setup btn-setup" onclick="openSetup('${uid}')">⚙</button>
+        <button class="c-btn c-btn-remove" onclick="removeSuspect('${uid}')">✕</button>
+      </div>
+    </div>`;
+
+  document.getElementById('board').appendChild(wrapper);
+  makeDraggable(wrapper);
+}
+
+function updateSuspectName(uid,name){
+  const s=suspects.find(s=>s.id===uid);if(s)s.name=name;
+  refreshAllEvLinks();
+}
+
+function getSuspLabel(v){
+  v=parseInt(v);
+  if(v<10)return'INNOCENT';if(v<30)return'PERSON OF INTEREST';
+  if(v<55)return'SUSPICIOUS';if(v<75)return'HIGHLY SUSPICIOUS';
+  if(v<90)return'LIKELY INVOLVED';return'PRIME SUSPECT';
+}
+function getSuspColor(v){
+  v=parseInt(v);
+  if(v<20)return'#2a6a3a';if(v<45)return'#7a6a28';
+  if(v<70)return'#8a4a28';return'#7a1a1a';
+}
+function updateSusp(id,val){
+  const c=getSuspColor(val),l=getSuspLabel(val);
+  const sv=document.getElementById('sv-'+id);
+  const sl=document.getElementById('slider-'+id);
+  if(sv){sv.textContent=l;sv.style.color=c}
+  if(sl)sl.style.background=`linear-gradient(to right,${c} ${val}%,rgba(0,0,0,0.2) ${val}%)`;
+}
+
+const STATUS_CYCLE=['poi','suspect','cleared'];
+const STATUS_LABELS={'poi':'◌ Person of Interest','suspect':'● Suspect','cleared':'✓ Cleared','arrested':'⚑ Arrested'};
+const STATUS_CLASSES={'poi':'status-poi','suspect':'status-suspect','cleared':'status-cleared','arrested':'status-arrested'};
+function cycleStatus(uid){
+  const s=suspects.find(s=>s.id===uid);if(!s||s.status==='arrested')return;
+  const i=STATUS_CYCLE.indexOf(s.status);
+  s.status=STATUS_CYCLE[(i+1)%STATUS_CYCLE.length];
+  const el=document.getElementById('status-'+uid);
+  el.className='status-badge '+STATUS_CLASSES[s.status];
+  el.textContent=STATUS_LABELS[s.status];
+}
+
+function toggleEmojiPicker(uid){
+  const p=document.getElementById('picker-'+uid);const open=p.classList.contains('open');
+  document.querySelectorAll('.c-emoji-picker').forEach(x=>x.classList.remove('open'));
+  if(!open)p.classList.add('open');
+}
+function setEmo(uid,e){document.getElementById('emo-'+uid).textContent=e;document.getElementById('picker-'+uid).classList.remove('open')}
+
+function removeSuspect(uid){
+  const el=document.getElementById(uid);if(!el)return;
+  el.style.transition='opacity 0.3s,transform 0.3s';
+  el.style.opacity='0';el.style.transform+=' scale(0.85)';
+  setTimeout(()=>{
+    el.remove();suspects=suspects.filter(s=>s.id!==uid);
+    updateBadge('suspects',suspects.length);refreshAllEvLinks();
+    if(!suspects.length)document.getElementById('board-empty').style.display='block';
+  },300);
+}
+
+/* ════════════════════════════════════════
+   INTERROGATION
+════════════════════════════════════════ */
+function interrogate(uid){
+  if(!caseOpen)return;
+  const s=suspects.find(s=>s.id===uid);if(!s)return;
+  if(s.interrogated>=2)return;
+  if(examTokens<=0){showNoTokens();return}
+
+  examTokens=Math.max(0,examTokens-1);
+  renderHUD();
+  s.interrogated++;
+  updateConfidence(confidence+8);
+
+  // First or second session response
+  const responseText=(s.interrogated===1)
+    ?(s.response||'\u201cI have nothing to say to you.\u201d')
+    :(s.response2||s.response||'\u201cI have nothing further to add.\u201d');
+
+  const ic=document.getElementById('icount-'+uid);
+  if(ic)ic.innerHTML=`Interrogations: <span>${s.interrogated} / 2</span>`;
+
+  if(s.interrogated>=2){
+    const ibtn=document.getElementById('ibtn-'+uid);
+    if(ibtn){ibtn.disabled=true;ibtn.insertAdjacentHTML('afterend','<div class="silent-badge">Will not speak further</div>')}
+  }
+
+  document.getElementById('interro-name').textContent=s.name||'Unknown Suspect';
+  document.getElementById('interro-response').textContent=responseText;
+  document.getElementById('interro-count-note').textContent=`Session ${s.interrogated} of 2. ${s.interrogated>=2?'This subject will not speak again.':'One session remaining.'}`;
+  document.getElementById('interro-panel').classList.add('open');
+}
+function closeInterro(){document.getElementById('interro-panel').classList.remove('open')}
+
+/* ════════════════════════════════════════
+   ARREST
+════════════════════════════════════════ */
+function attemptArrest(uid){
+  if(!caseOpen)return;
+  if(arrestsLeft<=0)return;
+  const s=suspects.find(s=>s.id===uid);if(!s)return;
+
+  arrestsLeft--;
+  renderHUD();
+
+  if(s.guilty){
+    // Correct arrest — CASE CLOSED
+    s.status='arrested';
+    const el=document.getElementById('status-'+uid);
+    if(el){el.className='status-badge status-arrested';el.textContent='⚑ Arrested'}
+    caseOpen=false;
+    setTimeout(()=>showCaseClosed(s.name||'Unknown Suspect'),400);
+  } else {
+    // Wrong arrest
+    s.status='poi';
+    const el=document.getElementById('status-'+uid);
+    if(el){el.className='status-badge status-poi';el.textContent='◌ Person of Interest'}
+    showWrongArrest();
+    if(arrestsLeft<=0){
+      caseOpen=false;
+      setTimeout(()=>showCaseCold(),1800);
+    }
+  }
+}
+
+const TAUNT = WRONG_MSGS;
+/* ════════════════════════════════════════
+   ENDINGS — CINEMATIC
+════════════════════════════════════════ */
+
+/* ── CORRECT ARREST: CASE CLOSED ── */
+function showCaseClosed(suspectName) {
+  const ov = document.getElementById('ending-overlay');
+  ov.className = 'active ending-closed';
+  ov.style.opacity = '1';
+  ov.innerHTML = '';
+
+  const motive     = window._gmMotive || '';
+  const elapsed    = fmtTime(Date.now() - caseStartTime);
+  const cluesExam  = evidences.filter(e => e.examined).length;
+  const attUsed    = 3 - arrestsLeft;
+
+  // Build DOM
+  const outer = document.createElement('div');
+  outer.className = 'cc-stamp-outer';
+  outer.id = 'cc-stamp-outer';
+
+  const box = document.createElement('div');
+  box.className = 'cc-stamp-box';
+  box.id = 'cc-stamp-box';
+  ['CASE','CLOSED'].forEach(w => {
+    const s = document.createElement('span');
+    s.className = 'cc-stamp-word';
+    s.textContent = w;
+    box.appendChild(s);
+  });
+  outer.appendChild(box);
+
+  const culpritEl = document.createElement('div');
+  culpritEl.className = 'cc-culprit';
+  culpritEl.textContent = suspectName.toUpperCase();
+  outer.appendChild(culpritEl);
+
+  const motiveEl = document.createElement('div');
+  motiveEl.className = 'cc-motive';
+  motiveEl.id = 'cc-motive';
+  outer.appendChild(motiveEl);
+
+  const statsEl = document.createElement('div');
+  statsEl.className = 'cc-stats';
+  statsEl.innerHTML = `Case solved in ${elapsed}<br>${cluesExam} clue${cluesExam!==1?'s':''} examined &nbsp;&middot;&nbsp; ${attUsed} arrest attempt${attUsed!==1?'s':''} used`;
+  outer.appendChild(statsEl);
+
+  const backBtn = document.createElement('button');
+  backBtn.className = 'cc-back-btn';
+  backBtn.textContent = 'Back to the Board';
+  backBtn.onclick = dismissEnding;
+  outer.appendChild(backBtn);
+
+  ov.appendChild(outer);
+
+  // ── SEQUENCE ──
+
+  // 1. Black for 2s (overlay already black, nothing to do)
+  // 2. Stamp slams in at 2s
+  setTimeout(() => {
+    outer.style.opacity = '1';
+    const stamp = document.getElementById('cc-stamp-box');
+    stamp.style.transition = 'none';
+    stamp.style.transform = 'scale(0) rotate(-6deg)';
+    void stamp.offsetWidth;
+    stamp.style.transition = 'transform 0.12s cubic-bezier(0.22,1.8,0.36,1)';
+    stamp.style.transform = 'scale(1.08) rotate(-6deg)';
+    setTimeout(() => {
+      // Thud recoil
+      stamp.style.transition = 'transform 0.08s ease-out';
+      stamp.style.transform = 'scale(0.97) rotate(-6deg)';
+      setTimeout(() => {
+        stamp.style.transition = 'transform 0.06s ease-in';
+        stamp.style.transform = 'scale(1) rotate(-6deg)';
+        // Shake
+        stamp.style.animation = 'ccStampShake 0.25s ease';
+      }, 80);
+    }, 120);
+  }, 2000);
+
+  // 3. Culprit name in gold at 2.7s
+  setTimeout(() => {
+    culpritEl.style.transition = 'opacity 0.5s';
+    culpritEl.style.opacity = '1';
+  }, 2700);
+
+  // 4. Motive word by word starting at 3.4s
+  if (motive) {
+    setTimeout(() => {
+      motiveEl.style.opacity = '1';
+      const words = motive.split(' ');
+      words.forEach((w, i) => {
+        const span = document.createElement('span');
+        span.className = 'mword';
+        span.textContent = (i === 0 ? '\u201c' : '') + w + (i === words.length - 1 ? '\u201d' : '') + ' ';
+        motiveEl.appendChild(span);
+      });
+      const mwords = motiveEl.querySelectorAll('.mword');
+      mwords.forEach((el, i) => {
+        setTimeout(() => {
+          el.style.transition = 'opacity 0.35s';
+          el.style.opacity = '1';
+        }, i * 90);
+      });
+      // After motive, show stats
+      const motiveDelay = words.length * 90 + 500;
+      setTimeout(() => {
+        statsEl.style.transition = 'opacity 0.6s';
+        statsEl.style.opacity = '1';
+      }, motiveDelay);
+      setTimeout(() => {
+        backBtn.style.transition = 'opacity 0.5s';
+        backBtn.style.opacity = '1';
+      }, motiveDelay + 600);
+    }, 3400);
+  } else {
+    setTimeout(() => {
+      statsEl.style.transition = 'opacity 0.6s';
+      statsEl.style.opacity = '1';
+    }, 3200);
+    setTimeout(() => {
+      backBtn.style.transition = 'opacity 0.5s';
+      backBtn.style.opacity = '1';
+    }, 3800);
+  }
+}
+
+/* ── WRONG ARREST ── */
+function showWrongArrest() {
+  const f = document.getElementById('wrong-flash');
+  const line1 = document.getElementById('wrong-line1');
+  const line2 = document.getElementById('wrong-line2');
+  const tokensEl = document.getElementById('wrong-tokens-left');
+
+  const TAUNTS = [
+    'They\'re watching you now.',
+    'The real killer smiles.',
+    'Incorrect. The truth slips further.',
+    'A mistake you can\'t take back.',
+    'Someone just relaxed.'
+  ];
+  line1.textContent = 'Wrong.';
+  line2.textContent = TAUNTS[Math.floor(Math.random() * TAUNTS.length)];
+  tokensEl.textContent = arrestsLeft + ' arrest attempt' + (arrestsLeft !== 1 ? 's' : '') + ' remaining';
+
+  f.classList.remove('active');
+  void f.offsetWidth;
+  f.classList.add('active');
+  setTimeout(() => f.classList.remove('active'), 2500);
+
+  // Body shudder
+  document.body.style.animation = 'none';
+  setTimeout(() => { document.body.style.animation = 'caseShake 0.4s ease'; }, 30);
+}
+
+/* ── ALL ATTEMPTS USED: CASE COLD ── */
+function showCaseCold() {
+  const ov = document.getElementById('ending-overlay');
+  ov.className = 'active ending-cold';
+  ov.style.opacity = '0';
+  ov.innerHTML = '';
+
+  const culpritName = (suspects.find(s => s.guilty) || {}).name || 'Unknown';
+
+  const outer = document.createElement('div');
+  outer.className = 'cold-outer';
+
+  // Letter-by-letter title
+  const titleWrap = document.createElement('div');
+  titleWrap.className = 'cold-title-wrap';
+  const TITLE = 'CASE  COLD';
+  TITLE.split('').forEach(ch => {
+    const span = document.createElement('span');
+    span.className = 'cold-letter';
+    span.textContent = ch === ' ' ? '\u00a0' : ch;
+    titleWrap.appendChild(span);
+  });
+  outer.appendChild(titleWrap);
+
+  const divider = document.createElement('div');
+  divider.className = 'cold-divider';
+  divider.id = 'cold-divider';
+  outer.appendChild(divider);
+
+  const trail = document.createElement('div');
+  trail.className = 'cold-trail';
+  trail.innerHTML = 'The trail has gone dark.';
+  outer.appendChild(trail);
+
+  const culpritReveal = document.createElement('div');
+  culpritReveal.className = 'cold-culprit-reveal';
+  culpritReveal.innerHTML = `It was <strong style="color:#1e1830;font-style:normal">${culpritName}</strong>.<br>They got away. For now.`;
+  outer.appendChild(culpritReveal);
+
+  const coda = document.createElement('div');
+  coda.className = 'cold-coda';
+  coda.textContent = 'The case remains open. Elara Voss remains missing.';
+  outer.appendChild(coda);
+
+  const backBtn = document.createElement('button');
+  backBtn.className = 'cold-back-btn';
+  backBtn.textContent = 'Return to the Board';
+  backBtn.onclick = dismissEnding;
+  outer.appendChild(backBtn);
+
+  ov.appendChild(outer);
+
+  // ── COLD SEQUENCE ──
+
+  // Fade overlay in from black slowly
+  setTimeout(() => {
+    ov.style.transition = 'opacity 1.4s ease';
+    ov.style.opacity = '1';
+  }, 100);
+
+  // Letters appear one by one, 0.12s apart, starting at 1.2s
+  const letters = titleWrap.querySelectorAll('.cold-letter');
+  letters.forEach((el, i) => {
+    setTimeout(() => {
+      el.style.transition = 'opacity 0.6s, color 1.2s';
+      el.style.opacity = '1';
+      // Gradually get slightly lighter as more appear
+      setTimeout(() => { el.style.color = '#1e1e2a'; }, 400);
+    }, 1200 + i * 140);
+  });
+
+  const titleDone = 1200 + letters.length * 140;
+
+  // Divider line expands
+  setTimeout(() => {
+    divider.style.width = '340px';
+  }, titleDone + 200);
+
+  // "The trail has gone dark."
+  setTimeout(() => {
+    trail.style.transition = 'opacity 1.2s';
+    trail.style.opacity = '1';
+  }, titleDone + 900);
+
+  // Culprit reveal
+  setTimeout(() => {
+    culpritReveal.style.transition = 'opacity 1.4s';
+    culpritReveal.style.opacity = '1';
+  }, titleDone + 2400);
+
+  // Coda
+  setTimeout(() => {
+    coda.style.transition = 'opacity 1.2s';
+    coda.style.opacity = '1';
+  }, titleDone + 3800);
+
+  // Back button
+  setTimeout(() => {
+    backBtn.style.transition = 'opacity 0.8s';
+    backBtn.style.opacity = '1';
+  }, titleDone + 5000);
+}
+
+function dismissEnding() {
+  const ov = document.getElementById('ending-overlay');
+  ov.style.transition = 'opacity 0.6s';
+  ov.style.opacity = '0';
+  setTimeout(() => {
+    ov.className = '';
+    ov.style.opacity = '';
+    ov.style.transition = '';
+    ov.innerHTML = '';
+    // Re-enable board interaction
+    caseOpen = true;
+  }, 650);
+}
+
+/* ════════════════════════════════════════
+   SETUP MODAL
+════════════════════════════════════════ */
+/* ════════════════════════════════════════
+   GM SETUP SYSTEM
+════════════════════════════════════════ */
+
+const GM_PASSWORD = 'detective';
+let gmLocked = false;
+let gmLongPressTimer = null;
+
+// ── GM Button wiring ──
+(function(){
+  const btn = document.getElementById('gm-btn');
+  if(!btn) return;
+
+  // Normal click → open gate
+  btn.addEventListener('click', ()=>{ if(!gmLocked) openGate(); });
+
+  // Long-press (3s) to reveal when locked
+  function startLongPress(){
+    if(!gmLocked) return;
+    btn.classList.add('pressing');
+    gmLongPressTimer = setTimeout(()=>{
+      gmLocked = false;
+      btn.classList.remove('hidden','pressing');
+      openGate();
+    }, 3000);
+  }
+  function cancelLongPress(){
+    clearTimeout(gmLongPressTimer);
+    btn.classList.remove('pressing');
+  }
+  btn.addEventListener('mousedown', startLongPress);
+  btn.addEventListener('touchstart', startLongPress, {passive:true});
+  btn.addEventListener('mouseup', cancelLongPress);
+  btn.addEventListener('mouseleave', cancelLongPress);
+  btn.addEventListener('touchend', cancelLongPress);
+
+  // Also: hidden long-press zone in bottom-right corner (when button is invisible)
+  const zone = document.createElement('div');
+  zone.style.cssText='position:fixed;bottom:0;right:0;width:48px;height:48px;z-index:599;cursor:default';
+  document.body.appendChild(zone);
+  zone.addEventListener('mousedown', startLongPress);
+  zone.addEventListener('touchstart', startLongPress, {passive:true});
+  zone.addEventListener('mouseup', cancelLongPress);
+  zone.addEventListener('mouseleave', cancelLongPress);
+  zone.addEventListener('touchend', cancelLongPress);
+})();
+
+// ── Password Gate ──
+function openGate(){
+  const g = document.getElementById('gm-gate');
+  const pw = document.getElementById('gate-pw');
+  const err = document.getElementById('gate-err');
+  pw.value=''; err.classList.remove('show');
+  g.classList.add('open');
+  setTimeout(()=>pw.focus(), 100);
+}
+function closeGate(){
+  document.getElementById('gm-gate').classList.remove('open');
+}
+function submitGate(){
+  const pw = document.getElementById('gate-pw').value;
+  const err = document.getElementById('gate-err');
+  const input = document.getElementById('gate-pw');
+  if(pw === GM_PASSWORD){
+    closeGate();
+    openGmPanel();
+  } else {
+    err.classList.add('show');
+    input.classList.add('shake');
+    input.value='';
+    setTimeout(()=>input.classList.remove('shake'), 500);
+  }
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const pw = document.getElementById('gate-pw');
+  if(pw) pw.addEventListener('keydown', e=>{ if(e.key==='Enter') submitGate(); });
+});
+
+// ── Open GM Panel (builds dynamic content) ──
+function openGmPanel(){
+  buildGmPanel();
+  document.getElementById('gm-panel').classList.add('open');
+}
+function closeGmPanel(){
+  saveGmData(); // auto-save on close
+  document.getElementById('gm-panel').classList.remove('open');
+}
+
+function buildGmPanel(){
+  buildGmCulpritDropdown();
+  buildGmSuspectResponses();
+  buildGmClueLinks();
+  restoreGmData();
+}
+
+function buildGmCulpritDropdown(){
+  const sel = document.getElementById('gm-culprit-select');
+  sel.innerHTML='<option value="">— None selected —</option>';
+  suspects.forEach(s=>{
+    const opt=document.createElement('option');
+    opt.value=s.id;
+    opt.textContent=(document.getElementById('emo-'+s.id)?.textContent||'👤')+' '+(s.name||'(unnamed)');
+    sel.appendChild(opt);
+  });
+}
+
+function buildGmSuspectResponses(){
+  const body = document.getElementById('gm-suspects-body');
+  if(!suspects.length){
+    body.innerHTML='<div style="font-family:\'Courier Prime\',monospace;font-size:9px;color:#2a1840;letter-spacing:0.15em">No suspects pinned yet.</div>';
+    return;
+  }
+  body.innerHTML = suspects.map(s=>{
+    const emo = document.getElementById('emo-'+s.id)?.textContent||'👤';
+    const name = s.name||'(unnamed)';
+    return`
+    <div class="gm-suspect-block">
+      <div class="gm-suspect-name"><span class="gm-emo">${emo}</span>${name}</div>
+      <div class="gm-two-col">
+        <div class="gm-field">
+          <div class="gm-fl">First Response (1st interrogation)</div>
+          <textarea class="gm-textarea" id="gmr1-${s.id}" placeholder='What do they say the first time?'>${s.response||''}</textarea>
+        </div>
+        <div class="gm-field">
+          <div class="gm-fl">Second Response (2nd interrogation)</div>
+          <textarea class="gm-textarea" id="gmr2-${s.id}" placeholder='What do they say under more pressure?'>${s.response2||''}</textarea>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function buildGmClueLinks(){
+  const body = document.getElementById('gm-clues-body');
+  if(!evidences.length){
+    body.innerHTML='<div style="font-family:\'Courier Prime\',monospace;font-size:9px;color:#2a1840;letter-spacing:0.15em">No clues logged yet.</div>';
+    return;
+  }
+  body.innerHTML = evidences.map(ev=>{
+    const ticked = ev.correctSuspect ? 'ticked':'';
+    const checked = ev.correctSuspect ? 'checked':'';
+    const name = ev.name||'(unnamed clue)';
+    return`
+    <label class="gm-clue-row ${ticked}" id="gmrow-${ev.id}" onclick="toggleGmClue('${ev.id}')">
+      <input class="gm-clue-check" type="checkbox" ${checked} id="gmclue-${ev.id}" onclick="event.stopPropagation();toggleGmClue('${ev.id}')" />
+      <div class="gm-clue-name">${name}</div>
+    </label>`;
+  }).join('');
+}
+
+function toggleGmClue(evId){
+  const ev = evidences.find(e=>e.id===evId); if(!ev) return;
+  const cb = document.getElementById('gmclue-'+evId);
+  const row = document.getElementById('gmrow-'+evId);
+  const culpritId = document.getElementById('gm-culprit-select')?.value||null;
+  if(cb.checked){
+    ev.correctSuspect = culpritId||'__any__';
+    row.classList.add('ticked');
+  } else {
+    ev.correctSuspect = null;
+    row.classList.remove('ticked');
+  }
+}
+
+function saveGmData(){
+  // Culprit
+  const culpritId = document.getElementById('gm-culprit-select')?.value||null;
+  suspects.forEach(s=>{ s.guilty=(s.id===culpritId); });
+
+  // Motive
+  const motive = document.getElementById('gm-motive')?.value||'';
+  window._gmMotive = motive;
+
+  // Responses
+  suspects.forEach(s=>{
+    const r1=document.getElementById('gmr1-'+s.id);
+    const r2=document.getElementById('gmr2-'+s.id);
+    if(r1) s.response=r1.value;
+    if(r2) s.response2=r2.value;
+  });
+
+  // Clue correct-links already saved live in toggleGmClue
+  // Update culprit ID on evidences that were ticked
+  const ticked=document.querySelectorAll('#gm-clues-body .gm-clue-check:checked');
+  ticked.forEach(cb=>{
+    const evId=cb.id.replace('gmclue-','');
+    const ev=evidences.find(e=>e.id===evId);
+    if(ev&&culpritId) ev.correctSuspect=culpritId;
+  });
+  // Update guilty on suspect cards
+  suspects.forEach(s=>{
+    const badge=document.getElementById('status-'+s.id);
+    // nothing visual to change — guilt is invisible
+  });
+}
+
+function restoreGmData(){
+  // Pre-select current culprit
+  const culpritId=(suspects.find(s=>s.guilty)||{}).id||'';
+  const sel=document.getElementById('gm-culprit-select');
+  if(sel) sel.value=culpritId;
+  // Pre-fill motive
+  const motive=document.getElementById('gm-motive');
+  if(motive) motive.value=window._gmMotive||'';
+}
+
+// ── Lock & Hand Over ──
+function lockSetup(){
+  saveGmData();
+  gmLocked=true;
+  document.getElementById('gm-panel').classList.remove('open');
+  document.getElementById('gm-btn').classList.add('hidden');
+  // Brief confirmation flash
+  showLockConfirm();
+}
+
+function showLockConfirm(){
+  const d=document.createElement('div');
+  d.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:7000;font-family:"Courier Prime",monospace;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#2a1840;background:#06040e;border:1px solid #180e28;padding:8px 20px;pointer-events:none;transition:opacity 0.5s';
+  d.textContent='SETUP LOCKED — CASE HANDED TO DETECTIVE';
+  document.body.appendChild(d);
+  setTimeout(()=>{d.style.opacity='0'; setTimeout(()=>d.remove(),600);},2200);
+}
+
+// Removed old per-card ⚙ openSetup — replaced by centralized GM panel
+// Keep stub so old card buttons don't error
+function openSetup(uid){openGmPanel()}
+function closeSetup(){}
+function saveSetup(){}
+
+/* ════════════════════════════════════════
+   EVIDENCE — LOCKED CLUE BOARD
+════════════════════════════════════════ */
+
+// EV_TILTS separate from suspect card tilts for variety
+const EV_TILTS = [-3.5,-1.5,0.8,2.2,-2.8,3.8,-0.6,1.8,-4,3,-1,4.2];
+let evCardCount = 0;
+
+function addEvidence(data={}){
+  document.getElementById('ev-empty').style.display='none';
+  const uid='ev-'+Date.now()+'-'+Math.random().toString(36).slice(2,5);
+  const num=String(++evCount).padStart(3,'0');
+  const status=data.status||'unexamined';
+  const linked=data.linked||[];
+  // examined: seeded clues start examined; new clues start locked
+  const examined=data.examined===true;
+  const tilt=EV_TILTS[evCardCount%EV_TILTS.length]; evCardCount++;
+  // correctSuspect: the GM-designated correct link for confidence scoring
+  const correctSuspect=data.correctSuspect||null;
+
+  evidences.push({id:uid,name:data.name||'',status,linked,examined,correctSuspect,desc:data.desc||''});
+  updateEvStats();
+  updateBadge('evidence',evidences.length);
+
+  // Wrapper (tilted, draggable)
+  const wrapper=document.createElement('div');
+  wrapper.className='ev-card-wrapper';
+  wrapper.id='evw-'+uid;
+  wrapper.style.cssText=`transform:rotate(${tilt}deg);position:relative;flex-shrink:0;z-index:2`;
+
+  // Pin
+  const pinHTML=`<div class="ev-pin"><div class="ev-pin-gem"></div><div class="ev-pin-needle"></div><div class="ev-pin-shadow"></div></div>`;
+
+  // Card
+  const card=document.createElement('div');
+  card.id=uid;
+  card.className='ev-card '+evCardClass(status,examined);
+  card.innerHTML=buildEvHTML(uid,num,data,status,linked,examined);
+
+  wrapper.innerHTML=pinHTML;
+  wrapper.appendChild(card);
+  document.getElementById('evidence-board').appendChild(wrapper);
+  makeEvDraggable(wrapper);
+}
+
+function evCardClass(status,examined){
+  if(!examined)return'ev-locked';
+  if(status==='key')return'ev-key';
+  if(status==='herring')return'ev-herring';
+  return'ev-unexamined';
+}
+
+function buildEvHTML(uid,num,data,status,linked,examined){
+  const stampHTML=buildStamp(status,examined);
+  const descHTML=examined
+    ? `<div class="ev-desc-revealed">
+         <div class="ev-fl">&#128196; Description</div>
+         <div class="ev-field"><textarea placeholder="What exactly is this clue?">${data.desc||''}</textarea></div>
+       </div>`
+    : `<div class="ev-locked-bar" id="lbar-${uid}" onclick="examineClue('${uid}')">
+         <span class="ev-locked-icon">&#128274;</span>
+         <div class="ev-locked-text">CLASSIFIED</div>
+         <div class="ev-locked-text" style="font-size:8px;margin-top:2px">TAP TO EXAMINE</div>
+         <div class="ev-locked-cost">Costs 1 examination token</div>
+       </div>`;
+  const linksHTML=examined ? buildLinkList(uid,linked) : '';
+  const statusBtnsHTML=examined
+    ? `<div class="ev-status-btns" id="evsbtns-${uid}">
+         <button class="ev-s-btn ${status==='unexamined'?'au':''}" onclick="setEvStatus('${uid}','unexamined')">Unexamined</button>
+         <button class="ev-s-btn ${status==='key'?'ak':''}" onclick="setEvStatus('${uid}','key')">Key Evidence</button>
+         <button class="ev-s-btn ${status==='herring'?'ah':''}" onclick="setEvStatus('${uid}','herring')">Red Herring</button>
+       </div>`
+    : `<div class="ev-status-btns" id="evsbtns-${uid}">
+         <button class="ev-s-btn" disabled>Unexamined</button>
+         <button class="ev-s-btn" disabled>Key Evidence</button>
+         <button class="ev-s-btn" disabled>Red Herring</button>
+       </div>`;
+
+  return`
+    <div class="ev-top-row">
+      <span id="evstamp-${uid}" class="ev-stamp ${stampHTML.cls}">${stampHTML.txt}</span>
+      <span class="ev-num">EV-${num}</span>
+    </div>
+    <div class="ev-card-name"><input type="text" placeholder="CLUE NAME" value="${data.name||''}" oninput="updateEvName('${uid}',this.value)"/></div>
+    <div id="evdesc-${uid}">${descHTML}</div>
+    <div class="ev-field"><div class="ev-fl">&#128205; Where Found</div><input type="text" placeholder="Location discovered..." value="${data.location||''}"/></div>
+    ${statusBtnsHTML}
+    <div id="evlinks-wrap-${uid}" ${examined?'':'style="display:none"'}>
+      <div class="ev-link-wrap">
+        <div class="ev-link-lbl">&#128279; Link to Suspect</div>
+        <div class="ev-link-list" id="evlinks-${uid}">${linksHTML}</div>
+      </div>
+    </div>
+    <div class="ev-actions"><button class="ev-rm-btn" onclick="removeEvidence('${uid}')">&#10005; Remove</button></div>`;
+}
+
+function buildStamp(status,examined){
+  if(!examined) return{cls:'stamp-locked',txt:'&#9632; CLASSIFIED'};
+  if(status==='key') return{cls:'stamp-key',txt:'&#9632; KEY EVIDENCE'};
+  if(status==='herring') return{cls:'stamp-herring',txt:'DEAD END'};
+  return{cls:'stamp-examined',txt:'&#10003; EXAMINED'};
+}
+
+function buildLinkList(uid,linked){
+  if(!suspects.length) return`<span class="ev-link-none">No suspects pinned yet.</span>`;
+  return suspects.map(s=>{
+    const chk=linked.includes(s.id)?'checked':'';
+    return`<label class="ev-link-item"><input type="checkbox" ${chk} onchange="toggleEvLink('${uid}','${s.id}',this.checked)"/><span>${s.name||'(unnamed)'}</span></label>`;
+  }).join('');
+}
+
+/* Examine a locked clue */
+function examineClue(uid){
+  if(examTokens<=0){showNoTokens();return}
+  const ev=evidences.find(e=>e.id===uid);if(!ev||ev.examined)return;
+
+  examTokens--;
+  renderHUD();
+  ev.examined=true;
+  updateConfidence(confidence+7);
+
+  // Camera flash
+  fireCameraFlash();
+
+  // Flash token consumed (slightly delayed so flash fires first)
+  setTimeout(()=>{
+    const tf=document.getElementById('token-flash');
+    const tm=document.getElementById('token-flash-msg');
+    tm.textContent='EXAMINATION TOKEN CONSUMED';
+    tf.classList.remove('active');void tf.offsetWidth;tf.classList.add('active');
+    setTimeout(()=>tf.classList.remove('active'),900);
+  }, 180);
+
+  // Reveal card content after flash settles
+  setTimeout(()=>{
+  // Rebuild card
+  const card=document.getElementById(uid);if(!card)return;
+  card.className='ev-card '+evCardClass(ev.status,true);
+
+  // Reveal description
+  const descEl=document.getElementById('evdesc-'+uid);
+  if(descEl){
+    descEl.innerHTML=`<div class="ev-desc-revealed">
+      <div class="ev-fl">&#128196; Description</div>
+      <div class="ev-field"><textarea placeholder="What exactly is this clue?">${ev.desc||''}</textarea></div>
+    </div>`;
+    const ta=descEl.querySelector('textarea');
+    if(ta)ta.addEventListener('input',()=>{ev.desc=ta.value});
+  }
+
+  // Update stamp
+  const stampEl=document.getElementById('evstamp-'+uid);
+  if(stampEl){const s=buildStamp(ev.status,true);stampEl.className='ev-stamp '+s.cls;stampEl.innerHTML=s.txt}
+
+  // Enable status buttons
+  const btnsEl=document.getElementById('evsbtns-'+uid);
+  if(btnsEl){
+    btnsEl.innerHTML=`
+      <button class="ev-s-btn ${ev.status==='unexamined'?'au':''}" onclick="setEvStatus('${uid}','unexamined')">Unexamined</button>
+      <button class="ev-s-btn ${ev.status==='key'?'ak':''}" onclick="setEvStatus('${uid}','key')">Key Evidence</button>
+      <button class="ev-s-btn ${ev.status==='herring'?'ah':''}" onclick="setEvStatus('${uid}','herring')">Red Herring</button>`;
+  }
+
+  // Show suspect links
+  const lwEl=document.getElementById('evlinks-wrap-'+uid);
+  if(lwEl){
+    lwEl.style.display='';
+    document.getElementById('evlinks-'+uid).innerHTML=buildLinkList(uid,ev.linked);
+  }
+
+  updateEvStats();
+  }, 300); // end reveal setTimeout — fires after camera flash settles
+}
+
+/* ── Camera flash ── */
+function fireCameraFlash(){
+  const f=document.getElementById('cam-flash');
+  if(!f)return;
+  f.classList.remove('fire');
+  void f.offsetWidth;
+  f.classList.add('fire');
+  setTimeout(()=>f.classList.remove('fire'),600);
+}
+
+/* ── Case Notes scratchpad ── */
+let notesSaveTimer=null;
+function toggleNotes(){
+  const panel=document.getElementById('notes-panel');
+  const btn=document.getElementById('notes-btn');
+  const isOpen=panel.classList.contains('open');
+  panel.classList.toggle('open',!isOpen);
+  btn.classList.toggle('active',!isOpen);
+  if(!isOpen){
+    // Load saved notes
+    const ta=document.getElementById('notes-textarea');
+    try{ const saved=localStorage.getItem('case_notes'); if(saved)ta.value=saved; }catch(e){}
+    updateNotesCount();
+    ta.focus();
+  }
+}
+function initNotes(){
+  const ta=document.getElementById('notes-textarea');
+  if(!ta)return;
+  // Restore from localStorage
+  try{ const saved=localStorage.getItem('case_notes'); if(saved)ta.value=saved; }catch(e){}
+  updateNotesCount();
+  ta.addEventListener('input',()=>{
+    updateNotesCount();
+    // Debounced save
+    clearTimeout(notesSaveTimer);
+    const savedEl=document.getElementById('notes-saved');
+    if(savedEl)savedEl.textContent='Saving...';
+    notesSaveTimer=setTimeout(()=>{
+      try{ localStorage.setItem('case_notes',ta.value); }catch(e){}
+      if(savedEl){ savedEl.textContent='Saved'; savedEl.classList.add('flash'); setTimeout(()=>savedEl.classList.remove('flash'),600); }
+    },600);
+  });
+}
+function updateNotesCount(){
+  const ta=document.getElementById('notes-textarea');
+  const cc=document.getElementById('notes-char-count');
+  const sv=document.getElementById('notes-saved');
+  if(ta&&cc) cc.textContent=ta.value.length+' chars';
+  if(ta&&sv&&ta.value.length>0){ try{ if(localStorage.getItem('case_notes')===ta.value) sv.textContent='Saved'; }catch(e){} }
+}
+// Close notes when clicking outside
+document.addEventListener('click',e=>{
+  const panel=document.getElementById('notes-panel');
+  const btn=document.getElementById('notes-btn');
+  if(panel&&panel.classList.contains('open')&&!panel.contains(e.target)&&e.target!==btn&&!btn.contains(e.target)){
+    panel.classList.remove('open');
+    btn.classList.remove('active');
+  }
+});
+
+function showNoTokens(){
+  const el=document.getElementById('no-tokens-msg');
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2200);
+}
+
+function updateEvName(uid,name){const e=evidences.find(e=>e.id===uid);if(e)e.name=name}
+
+function setEvStatus(uid,status){
+  const ev=evidences.find(e=>e.id===uid);if(!ev||!ev.examined)return;
+  ev.status=status;
+  const card=document.getElementById(uid);if(!card)return;
+  card.className='ev-card '+evCardClass(status,true);
+
+  // Update stamp
+  const stampEl=document.getElementById('evstamp-'+uid);
+  if(stampEl){const s=buildStamp(status,true);stampEl.className='ev-stamp '+s.cls;stampEl.innerHTML=s.txt}
+
+  // Update button active states
+  const btnsEl=document.getElementById('evsbtns-'+uid);
+  if(btnsEl){
+    btnsEl.querySelectorAll('.ev-s-btn').forEach((b,i)=>{
+      const ss=['unexamined','key','herring'][i];
+      const amap={unexamined:'au',key:'ak',herring:'ah'};
+      b.className='ev-s-btn'+(ss===status?' '+amap[ss]:'');
+    });
+  }
+  if(status==='key')updateConfidence(confidence+5);
+  updateEvStats();
+}
+
+function toggleEvLink(evUid,suspUid,checked){
+  const ev=evidences.find(e=>e.id===evUid);if(!ev)return;
+  if(checked){
+    if(!ev.linked.includes(suspUid)) ev.linked.push(suspUid);
+    // Secret confidence check — correct link?
+    if(ev.correctSuspect&&ev.correctSuspect===suspUid){
+      updateConfidence(confidence+9);
+    } else {
+      updateConfidence(confidence+3);
+    }
+  } else {
+    ev.linked=ev.linked.filter(s=>s!==suspUid);
+  }
+}
+
+function removeEvidence(uid){
+  const wrapper=document.getElementById('evw-'+uid)||document.getElementById(uid);
+  if(!wrapper)return;
+  wrapper.style.transition='opacity 0.3s,transform 0.3s';
+  wrapper.style.opacity='0';wrapper.style.transform+=' scale(0.88)';
+  setTimeout(()=>{
+    wrapper.remove();
+    evidences=evidences.filter(e=>e.id!==uid);
+    updateEvStats();updateBadge('evidence',evidences.length);
+    if(!evidences.length)document.getElementById('ev-empty').style.display='block';
+  },300);
+}
+
+function updateEvStats(){
+  const tot=evidences.length;
+  const key=evidences.filter(e=>e.status==='key'&&e.examined).length;
+  const unex=evidences.filter(e=>!e.examined).length;
+  const exam=evidences.filter(e=>e.examined).length;
+  const herr=evidences.filter(e=>e.status==='herring'&&e.examined).length;
+  document.getElementById('st-total').textContent=tot;
+  document.getElementById('st-key').textContent=key;
+  document.getElementById('st-unex').textContent=unex;
+  document.getElementById('st-exam').textContent=exam;
+  document.getElementById('st-herr').textContent=herr;
+}
+
+function refreshAllEvLinks(){
+  evidences.forEach(ev=>{
+    if(!ev.examined)return;
+    const listEl=document.getElementById('evlinks-'+ev.id);if(!listEl)return;
+    if(!suspects.length){listEl.innerHTML=`<span class="ev-link-none">No suspects pinned yet.</span>`;return}
+    listEl.innerHTML=buildLinkList(ev.id,ev.linked);
+  });
+}
+
+/* Evidence card dragging (separate from suspect board drag) */
+let evDragging=null,evDragOffX=0,evDragOffY=0;
+function makeEvDraggable(el){
+  el.addEventListener('mousedown',startEvDrag);
+  el.addEventListener('touchstart',startEvDragTouch,{passive:true});
+}
+function startEvDrag(e){
+  if(['INPUT','TEXTAREA','BUTTON','LABEL','SPAN'].includes(e.target.tagName))return;
+  evDragging=e.currentTarget;
+  const r=evDragging.getBoundingClientRect();
+  evDragOffX=e.clientX-r.left;evDragOffY=e.clientY-r.top;
+  evDragging.style.zIndex=100;evDragging.style.transition='none';e.preventDefault();
+}
+function startEvDragTouch(e){
+  if(['INPUT','TEXTAREA','BUTTON','LABEL'].includes(e.target.tagName))return;
+  evDragging=e.currentTarget;
+  const t=e.touches[0],r=evDragging.getBoundingClientRect();
+  evDragOffX=t.clientX-r.left;evDragOffY=t.clientY-r.top;
+  evDragging.style.zIndex=100;evDragging.style.transition='none';
+}
+document.addEventListener('mousemove',e=>{
+  if(!evDragging)return;
+  const br=document.getElementById('evidence-board').getBoundingClientRect();
+  evDragging.style.position='absolute';
+  evDragging.style.left=Math.max(0,e.clientX-br.left-evDragOffX)+'px';
+  evDragging.style.top=Math.max(0,e.clientY-br.top-evDragOffY)+'px';
+  evDragging.style.margin='0';
+});
+document.addEventListener('touchmove',e=>{
+  if(!evDragging)return;
+  const t=e.touches[0],br=document.getElementById('evidence-board').getBoundingClientRect();
+  evDragging.style.position='absolute';
+  evDragging.style.left=Math.max(0,t.clientX-br.left-evDragOffX)+'px';
+  evDragging.style.top=Math.max(0,t.clientY-br.top-evDragOffY)+'px';
+  evDragging.style.margin='0';
+},{passive:true});
+document.addEventListener('mouseup',()=>{if(evDragging){evDragging.style.zIndex=2;evDragging.style.transition='';evDragging=null}});
+document.addEventListener('touchend',()=>{if(evDragging){evDragging.style.zIndex=2;evDragging.style.transition='';evDragging=null}});
+
+/* ════════════════════════════════════════
+   EVENTS — COLD CASE POLICE LOG
+════════════════════════════════════════ */
+
+function addEventFromBar(){
+  const timeEl=document.getElementById('tl-new-time');
+  const descEl=document.getElementById('tl-new-desc');
+  const time=timeEl.value.trim();
+  const desc=descEl.value.trim();
+  if(!time&&!desc)return;
+  addEvent({time,desc});
+  timeEl.value='';
+  descEl.value='';
+  timeEl.focus();
+}
+
+// Allow Enter in desc field to submit
+document.addEventListener('DOMContentLoaded',()=>{
+  const d=document.getElementById('tl-new-desc');
+  if(d)d.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();addEventFromBar()}});
+  const t=document.getElementById('tl-new-time');
+  if(t)t.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();document.getElementById('tl-new-desc').focus()}});
+});
+
+function addEvent(data={}){
+  document.getElementById('timeline-empty').style.display='none';
+  const uid='evt-'+Date.now()+'-'+Math.random().toString(36).slice(2,5);
+  const seqNum=events.length+1;
+  events.push({id:uid,time:data.time||'',desc:data.desc||''});
+  evtCount++;
+  updateBadge('events',events.length);
+  updateTlCount();
+
+  const outer=document.getElementById('timeline-outer');
+  const entry=document.createElement('div');
+  entry.className='event-entry';
+  entry.id=uid;
+
+  const ref='LOG-'+String(seqNum).padStart(4,'0');
+  const escapedDesc=(data.desc||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const escapedTime=(data.time||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+  entry.innerHTML=`
+    <div class="tl-seq">${String(seqNum).padStart(2,'0')}</div>
+    <div class="tl-dot-col"><div class="tl-dot"></div></div>
+    <div class="tl-card">
+      <div class="tl-timestamp-row">
+        <span class="tl-ts-icon">&#9719;</span>
+        <input class="tl-timestamp" type="text"
+          placeholder="-- : -- -- &mdash; Day, Date"
+          value="${escapedTime}"
+          oninput="updateEvtTime('${uid}',this.value)" />
+        <span class="tl-log-ref">${ref}</span>
+      </div>
+      <div class="tl-desc-wrap">
+        <textarea class="tl-desc"
+          placeholder="Enter log entry... What was reported, observed, or recorded."
+          oninput="updateEvtDesc('${uid}',this.value)">${escapedDesc}</textarea>
+      </div>
+      <div class="tl-footer">
+        <div class="tl-status-dot"></div>
+        <button class="tl-rm" onclick="removeEvent('${uid}')">&#9003; DELETE ENTRY</button>
+      </div>
+    </div>`;
+
+  // Auto-resize textarea
+  const ta=entry.querySelector('.tl-desc');
+  ta.addEventListener('input',()=>autoResizeTa(ta));
+  setTimeout(()=>autoResizeTa(ta),10);
+
+  outer.appendChild(entry);
+  rescaleSpine();
+}
+
+function autoResizeTa(ta){
+  ta.style.height='auto';
+  ta.style.height=(ta.scrollHeight)+'px';
+}
+
+function updateEvtTime(uid,val){const e=events.find(e=>e.id===uid);if(e)e.time=val}
+function updateEvtDesc(uid,val){const e=events.find(e=>e.id===uid);if(e)e.desc=val}
+
+function removeEvent(uid){
+  const el=document.getElementById(uid);if(!el)return;
+  el.style.transition='opacity 0.3s,transform 0.3s';
+  el.style.opacity='0';el.style.transform='translateX(-8px)';
+  setTimeout(()=>{
+    el.remove();
+    events=events.filter(e=>e.id!==uid);
+    updateBadge('events',events.length);
+    updateTlCount();
+    // Re-number visible sequence labels
+    renumberEntries();
+    rescaleSpine();
+    if(!events.length)document.getElementById('timeline-empty').style.display='block';
+  },320);
+}
+
+function renumberEntries(){
+  document.querySelectorAll('#timeline-outer .event-entry .tl-seq').forEach((el,i)=>{
+    el.textContent=String(i+1).padStart(2,'0');
+  });
+}
+
+function updateTlCount(){
+  const c=events.length;
+  const el=document.getElementById('tl-count');
+  if(el)el.textContent=c+' '+(c===1?'ENTRY':'ENTRIES');
+}
+
+function rescaleSpine(){
+  // Spine is CSS absolute — just ensure it fills the outer div; nothing needed in JS
+  // But we pulse the dot on newest entry briefly
+  const entries=document.querySelectorAll('#timeline-outer .event-entry');
+  if(!entries.length)return;
+  const lastDot=entries[entries.length-1].querySelector('.tl-dot');
+  if(!lastDot)return;
+  lastDot.style.transition='box-shadow 0.1s';
+  lastDot.style.boxShadow='0 0 0 2px #0d0a14,0 0 0 3px #2a1640,0 0 18px rgba(107,63,160,0.75)';
+  setTimeout(()=>{lastDot.style.boxShadow='0 0 0 2px #0d0a14,0 0 0 3px #2a1640,0 0 10px rgba(107,63,160,0.45)'},600);
+}
+
+/* ════════════════════════════════════════
+   UTILS
+════════════════════════════════════════ */
+function updateBadge(name,val){
+  const el=document.getElementById('badge-'+name);if(el)el.textContent=val;
+}
+
+/* ════════════════════════════════════════
+   DRAG (suspects board)
+════════════════════════════════════════ */
+function makeDraggable(el){
+  el.addEventListener('mousedown',startDrag);
+  el.addEventListener('touchstart',startDragTouch,{passive:true});
+}
+function startDrag(e){
+  if(['INPUT','TEXTAREA','BUTTON','SPAN','LABEL'].includes(e.target.tagName))return;
+  dragging=e.currentTarget;
+  const r=dragging.getBoundingClientRect();
+  dragOffX=e.clientX-r.left;dragOffY=e.clientY-r.top;
+  dragging.style.zIndex=100;dragging.style.transition='none';e.preventDefault();
+}
+function startDragTouch(e){
+  if(['INPUT','TEXTAREA','BUTTON','LABEL'].includes(e.target.tagName))return;
+  dragging=e.currentTarget;
+  const t=e.touches[0],r=dragging.getBoundingClientRect();
+  dragOffX=t.clientX-r.left;dragOffY=t.clientY-r.top;
+  dragging.style.zIndex=100;dragging.style.transition='none';
+}
+document.addEventListener('mousemove',e=>{
+  if(!dragging)return;
+  const br=document.getElementById('board').getBoundingClientRect();
+  dragging.style.position='absolute';
+  dragging.style.left=Math.max(0,e.clientX-br.left-dragOffX)+'px';
+  dragging.style.top=Math.max(0,e.clientY-br.top-dragOffY)+'px';
+  dragging.style.margin='0';
+});
+document.addEventListener('touchmove',e=>{
+  if(!dragging)return;
+  const t=e.touches[0],br=document.getElementById('board').getBoundingClientRect();
+  dragging.style.position='absolute';
+  dragging.style.left=Math.max(0,t.clientX-br.left-dragOffX)+'px';
+  dragging.style.top=Math.max(0,t.clientY-br.top-dragOffY)+'px';
+  dragging.style.margin='0';
+},{passive:true});
+document.addEventListener('mouseup',()=>{if(dragging){dragging.style.zIndex=2;dragging.style.transition='';dragging=null}});
+document.addEventListener('touchend',()=>{if(dragging){dragging.style.zIndex=2;dragging.style.transition='';dragging=null}});
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.c-avatar')&&!e.target.closest('.c-emoji-picker'))
+    document.querySelectorAll('.c-emoji-picker').forEach(p=>p.classList.remove('open'));
+  if(!e.target.closest('#banner-photo-btn')&&!e.target.closest('#photo-picker'))
+    document.getElementById('photo-picker').classList.remove('open');
+});
+
+/* Shake */
+const ss=document.createElement('style');
+ss.textContent=`
+@keyframes caseShake{0%,100%{transform:none}15%{transform:translateX(-7px) rotate(-0.4deg)}30%{transform:translateX(7px) rotate(0.4deg)}45%{transform:translateX(-5px)}60%{transform:translateX(5px)}80%{transform:translateX(-2px)}}
+@keyframes ccStampShake{0%,100%{transform:scale(1) rotate(-6deg)}25%{transform:scale(1) rotate(-6deg) translateX(-5px)}75%{transform:scale(1) rotate(-6deg) translateX(4px)}}
+`;
+document.head.appendChild(ss);
+
+/* ════════════════════════════════════════
+   SEED DATA
+════════════════════════════════════════ */
+window.onload=()=>{
+  renderHUD();
+  initNotes();
+  window._gmMotive = "He recognised Elara from a previous incident he was involved in — one that had never been reported. She had seen something she shouldn't have. When she boarded that night and looked at him, he knew she remembered. He panicked. He couldn't let her walk away again.";
+
+  // ── SEVEN SUSPECTS ──
+  addSuspect({
+    name: 'Mrs Calloway',
+    emoji: '🧓',
+    connection: 'Retired librarian — last person to speak to Elara inside the library',
+    hiding: 'The book Elara borrowed was not in the library catalogue. It shouldn\'t exist.',
+    alibi: 'Home alone. No witnesses.',
+    suspicion: 65,
+    response: '"Elara was a lovely girl. Very curious. She asked about a specific book — I don\'t know where it came from, it was on the returns shelf. I didn\'t think anything of it. I just let her take it."',
+    response2: '"I\'ve told you everything I know. I don\'t understand why that book matters. It was just a book."',
+    guilty: false
+  });
+
+  addSuspect({
+    name: 'Dev Sharma',
+    emoji: '🧑',
+    connection: 'Elara\'s classmate — argued with her publicly the day before she vanished',
+    hiding: 'He followed her to the bus stop but says he turned back.',
+    alibi: 'His sister. She confirms it.',
+    suspicion: 55,
+    response: '"Yeah, we argued. About something stupid. I followed her because I wanted to apologise — but she looked upset already when she got to the stop. Like something had already happened. I left her alone. I shouldn\'t have."',
+    response2: '"My sister was with me the whole evening. Check my phone. I texted Elara at 9:18 asking if she got home. She never replied."',
+    guilty: false
+  });
+
+  addSuspect({
+    name: 'The Reverend',
+    emoji: '👴',
+    connection: 'Runs the local church — knew Elara\'s family for years',
+    hiding: 'Pages are torn from the church visitor book — the same week Elara started acting strangely.',
+    alibi: 'Evening service. Confirmed by six parishioners.',
+    suspicion: 25,
+    response: '"I baptised that child. I have prayed for her every day since. The missing pages — I removed them myself. One of our parishioners made some... troubling written remarks. I did not want them on record. That is all."',
+    response2: '"You are welcome to speak with every person at that service. I was there the entire evening. I am not hiding anything from you — only protecting someone who cannot protect themselves."',
+    guilty: false
+  });
+
+  addSuspect({
+    name: 'Nora Finch',
+    emoji: '👩',
+    connection: 'Elara\'s best friend — the one who reported her missing',
+    hiding: 'The two shared a secret they swore never to tell anyone. She refuses to say what it was.',
+    alibi: 'Was with her boyfriend. Boyfriend is currently uncontactable.',
+    suspicion: 70,
+    response: '"I can\'t tell you what the secret was. I promised her. I know how that sounds. But it wasn\'t anything dangerous — it was about someone else. Someone who would be hurt if it came out. Elara would not want me to say."',
+    response2: '"You can keep asking. I will keep not answering. Not because I don\'t want to find her — because telling you might be what puts her in danger."',
+    guilty: false
+  });
+
+  addSuspect({
+    name: 'Mr Osei',
+    emoji: '🧔',
+    connection: 'School counsellor — held private sessions with Elara for three months',
+    hiding: 'He shredded his session notes the morning she was reported missing.',
+    alibi: 'Claims he was at a conference in the city. Ticket unverified.',
+    suspicion: 80,
+    response: '"Those notes were destroyed in line with our safeguarding policy when a case is escalated. That is standard procedure. I can\'t speak to the content of our sessions — that is protected. What I can tell you is that Elara was frightened of something she had seen. I urged her to come forward. She refused."',
+    response2: '"I should not have said that. Please. I am trying to protect a process that protects children. Whatever I may have done wrong procedurally — I did not hurt that girl."',
+    guilty: false
+  });
+
+  addSuspect({
+    name: 'The Bus Driver',
+    emoji: '🚌',
+    connection: 'Drove the last bus from the village the night Elara disappeared',
+    hiding: 'Claims no one matching Elara\'s description boarded. CCTV shows otherwise.',
+    alibi: 'His route log.',
+    suspicion: 85,
+    response: '"I drive that route every Thursday. It was quiet that night. I don\'t remember a girl in a red scarf. I\'d have noticed. Maybe the camera angle is misleading — it happens with those old systems."',
+    response2: '"I want to stop answering questions without someone present. I\'ve said what I said. The camera doesn\'t prove anything. People stand near bus stops without boarding."',
+    guilty: true
+  });
+
+  addSuspect({
+    name: 'Aunt Patricia',
+    emoji: '👩‍🦳',
+    connection: 'Elara\'s estranged aunt — lives two villages over',
+    hiding: 'Called Elara\'s phone at 8:54 PM. Eight minutes before she disappeared. Call lasted four minutes.',
+    alibi: 'None given.',
+    suspicion: 60,
+    response: '"She called me, actually. I want that on record. She rang and I picked up. She was scared. She told me she\'d seen something on the bus once — months ago — and that she thought the man had recognised her that day in the village. I told her to go straight home. That was the last I heard."',
+    response2: '"I know how this looks. Estranged family, no alibi, a phone call minutes before. But I loved that girl. Whatever happened to her — I tried to warn her. I failed. I have to live with that."',
+    guilty: false
+  });
+
+  // ── FIVE CLUES (all locked, linked to the right suspects) ──
+  setTimeout(() => {
+    // Map suspect names to IDs for linking
+    const byName = n => suspects.find(s => s.name === n)?.id;
+    const calId  = byName('Mrs Calloway');
+    const oseiId = byName('Mr Osei');
+    const busId  = byName('The Bus Driver');
+    const revId  = byName('The Reverend');
+    const patId  = byName('Aunt Patricia');
+
+    addEvidence({
+      name: 'The Library Book',
+      desc: '"A Field Guide to Plants That Cause Memory Loss" — not catalogued anywhere in the county library system. No ISBN. No publisher listed. Last page has a handwritten note: "She is asking questions again."',
+      location: "Elara's school bag, found abandoned at the bus stop",
+      status: 'unexamined',
+      linked: [],
+      examined: false,
+      correctSuspect: calId
+    });
+
+    addEvidence({
+      name: 'Shredded Documents',
+      desc: 'Fragments recovered from Mr Osei\'s office bin. Partial text reads: "...cannot tell anyone what she saw... she knows what she saw on the 6:40... if this comes out..." Paper type matches standard counselling note stock.',
+      location: "Retrieved from waste bin in Mr Osei's office, Dunmore Secondary School",
+      status: 'unexamined',
+      linked: [],
+      examined: false,
+      correctSuspect: oseiId
+    });
+
+    addEvidence({
+      name: 'CCTV Discrepancy',
+      desc: 'Bus stop camera — timestamp 21:04 — clearly shows a figure in a dark coat and red scarf boarding the 9:02 service. The driver has stated under questioning that no such person boarded. One of them is lying.',
+      location: 'Dunmore Village bus stop camera. Footage retrieved by DC Morris.',
+      status: 'unexamined',
+      linked: [],
+      examined: false,
+      correctSuspect: busId
+    });
+
+    addEvidence({
+      name: 'Torn Church Pages',
+      desc: 'Three pages removed from the St Cuthbert\'s visitor book. Dates correspond exactly to the week Elara first approached her school counsellor and began refusing to take the bus. The remaining pages show normal signatures.',
+      location: "St Cuthbert's Church, visitor log book, vestry shelf",
+      status: 'unexamined',
+      linked: [],
+      examined: false,
+      correctSuspect: revId
+    });
+
+    addEvidence({
+      name: 'The Phone Call',
+      desc: 'Records confirm: Aunt Patricia\'s number called Elara\'s mobile at 20:54, lasting 3 minutes 58 seconds. Witnesses at the bus stop report Elara appeared calm before the call and was visibly distressed and running when it ended.',
+      location: "Elara's phone records, obtained under warrant",
+      status: 'unexamined',
+      linked: [],
+      examined: false,
+      correctSuspect: patId
+    });
+
+  }, 150);
+
+  // ── TIMELINE — three pre-loaded entries ──
+  addEvent({
+    time: '3:45 PM \u2014 Thursday',
+    desc: 'Last confirmed sighting at school. Seen leaving alone by two witnesses who disagree on which direction she went. Both agree she was not her usual self.'
+  });
+  addEvent({
+    time: '6:00 PM \u2014 Thursday',
+    desc: "Her phone sends its last location ping. A field outside the village, half a mile from the nearest road. Then nothing. Battery not dead — location services simply stop."
+  });
+  addEvent({
+    time: '11:30 PM \u2014 Thursday',
+    desc: "Family reports her missing. The officer taking the call logs it as low priority — a teenager staying out late. They will regret this."
+  });
+};
+</script>
+</body>
+</html>
