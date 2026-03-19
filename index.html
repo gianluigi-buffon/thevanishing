@@ -175,58 +175,47 @@ body::after{
   background:linear-gradient(to bottom,#0a0810 0%,#0d0b14 100%);
   border-bottom:2px solid #2a1a40;
   box-shadow:0 4px 32px rgba(0,0,0,0.9),0 0 60px rgba(107,63,160,0.08);
-  padding:12px 20px 10px;
+  padding:10px 16px 10px;
 }
 .banner-inner{
   max-width:1100px;margin:0 auto;
-  display:flex;align-items:flex-start;gap:14px;
-  flex-wrap:wrap;
+  display:flex;align-items:flex-start;gap:12px;
+  flex-wrap:nowrap; /* single row on desktop */
 }
 .missing-stamp{
   font-family:'Special Elite',monospace;
-  font-size:clamp(22px,4vw,40px);
-  letter-spacing:0.28em;
+  font-size:clamp(18px,3.5vw,36px);
+  letter-spacing:0.2em;
   color:#9a1010;
-  /* Worn ink: multiple red shadows at slight offsets mimic uneven ink coverage */
   text-shadow:
     0 0 0 #6a0808,
     1px 0 0 rgba(139,16,16,0.5),
     -1px 0 0 rgba(139,16,16,0.3),
-    0 1px 0 rgba(80,0,0,0.4),
-    2px 1px 0 rgba(100,10,10,0.2),
     0 0 18px rgba(154,16,16,0.35);
-  /* Slight tilt — like a rubber stamp that wasn't pressed perfectly straight */
   transform:rotate(-2.8deg);
   transform-origin:left center;
   display:inline-block;
   white-space:nowrap;
-  align-self:flex-start;
-  padding-top:6px;
-  writing-mode:horizontal-tb;
-  /* Subtle opacity variation for aged ink look */
+  align-self:center;
+  padding-top:4px;
   animation:stampAge 9s infinite;
   position:relative;
+  flex-shrink:0;
 }
-/* Worn edge effect via pseudo — a faint horizontal bleed */
 .missing-stamp::after{
   content:attr(data-text);
-  position:absolute;
-  inset:0;
+  position:absolute;inset:0;
   color:transparent;
   -webkit-text-stroke:1px rgba(139,16,16,0.08);
   transform:scaleX(1.01) translateX(1px);
   pointer-events:none;
 }
-@keyframes stampAge{
-  0%,85%,100%{opacity:1}
-  88%{opacity:0.82}
-  92%{opacity:0.95}
-  96%{opacity:0.78}
-}
+@keyframes stampAge{0%,85%,100%{opacity:1}88%{opacity:0.82}92%{opacity:0.95}96%{opacity:0.78}}
 @keyframes redFlicker{0%,96%,100%{opacity:1}97%{opacity:0.65}98.5%{opacity:1}99.5%{opacity:0.8}}
+
 .banner-photo{
-  font-size:52px;line-height:1;
-  width:72px;height:72px;
+  font-size:44px;line-height:1;
+  width:62px;height:62px;
   border:2px solid #3a2a18;
   background:rgba(0,0,0,0.4);
   display:flex;align-items:center;justify-content:center;
@@ -234,23 +223,42 @@ body::after{
   flex-shrink:0;cursor:pointer;transition:transform 0.2s;position:relative;
 }
 .banner-photo:hover{transform:scale(1.06)}
-.banner-photo-hint{position:absolute;bottom:2px;right:3px;font-size:9px;font-family:'Courier Prime',monospace;color:#5a4020;letter-spacing:0}
-.banner-fields{display:flex;flex-wrap:wrap;gap:6px 16px;flex:1;min-width:0}
-.bfield{display:flex;flex-direction:column;gap:2px;min-width:0}
-.bfield-label{font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:0.22em;text-transform:uppercase;color:#4a3860}
+.banner-photo-hint{position:absolute;bottom:2px;right:3px;font-size:8px;font-family:'Courier Prime',monospace;color:#5a4020;letter-spacing:0}
+
+/* Field grid — responsive using CSS grid */
+.banner-fields{
+  display:grid;
+  grid-template-columns:1fr auto 1fr 1fr;
+  grid-template-rows:auto auto;
+  gap:4px 14px;
+  flex:1;
+  min-width:0;
+  align-items:start;
+}
+.bfield{display:flex;flex-direction:column;gap:1px;min-width:0;overflow:hidden}
+.bfield-label{
+  font-family:'Courier Prime',monospace;
+  font-size:7px;letter-spacing:0.22em;text-transform:uppercase;color:#4a3860;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
 .bfield input,.bfield textarea{
   background:transparent;border:none;border-bottom:1px solid #2a1f30;
-  font-family:'Special Elite',monospace;font-size:clamp(11px,2.5vw,13px);color:#b8a890;
-  outline:none;padding:1px 2px;transition:border-color 0.2s;
-  min-width:0;width:100%;
+  font-family:'Special Elite',monospace;font-size:12px;color:#b8a890;
+  outline:none;padding:1px 0;transition:border-color 0.2s;
+  width:100%;min-width:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .bfield input:focus,.bfield textarea:focus{border-bottom-color:#5a3a80}
-.bfield.wide{flex:1;min-width:140px}
-.bfield textarea{resize:none;height:36px;font-size:11px;line-height:1.4}
+/* Description spans full width on second row */
+.bfield.desc-field{grid-column:1/-1}
+.bfield textarea{
+  resize:none;height:28px;font-size:11px;line-height:1.3;
+  white-space:normal;overflow:hidden;text-overflow:clip;
+}
 
 /* Photo emoji picker */
 .photo-picker{
-  display:none;position:absolute;top:78px;left:0;
+  display:none;position:absolute;top:68px;left:0;
   background:#100c18;border:1px solid #2a1a40;
   padding:8px;z-index:600;flex-wrap:wrap;gap:4px;width:200px;
   box-shadow:0 8px 24px rgba(0,0,0,0.95);
@@ -258,6 +266,31 @@ body::after{
 .photo-picker.open{display:flex}
 .photo-opt{font-size:22px;cursor:pointer;padding:2px;transition:transform 0.1s}
 .photo-opt:hover{transform:scale(1.25)}
+
+/* Mobile banner: stack into two rows */
+@media(max-width:680px){
+  .banner-inner{
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .missing-stamp{
+    font-size:clamp(16px,5.5vw,26px);
+    letter-spacing:0.15em;
+  }
+  .banner-photo{
+    width:54px;height:54px;font-size:36px;
+  }
+  .banner-fields{
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:auto auto auto;
+    width:100%;
+    gap:4px 10px;
+  }
+  .bfield.desc-field{grid-column:1/-1}
+  .bfield input,.bfield textarea{
+    font-size:11px;
+  }
+}
 
 /* ═══════════════════════════════════════════════
    CASE NAME
@@ -584,17 +617,15 @@ body::after{
   padding:6px 8px;font-family:'Courier Prime',monospace;font-size:11px;
   color:var(--ink2);resize:none;outline:none;line-height:1.5;
   transition:background 0.2s,border-color 0.2s;
-  /* Never clip — always show full text */
-  overflow:visible;
-  white-space:normal;
-  word-break:break-word;
+  word-break:break-word;overflow-wrap:break-word;
+  box-sizing:border-box;
 }
 .c-field input[type=text]:focus,.c-field textarea:focus{background:rgba(0,0,0,0.1);border-color:rgba(107,63,160,0.35)}
-/* Textareas grow to fit content — no fixed height clipping */
+/* Textareas: overflow:hidden is required so scrollHeight gives correct auto-height */
 .c-field textarea{
   height:auto;
-  min-height:52px;
-  overflow-y:hidden;
+  min-height:48px;
+  overflow:hidden;
 }
 
 /* Suspicion slider */
@@ -1809,23 +1840,23 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
       </div>
     </div>
     <div class="banner-fields">
-      <div class="bfield wide">
+      <div class="bfield">
         <div class="bfield-label">Full Name</div>
         <input type="text" id="mp-name" placeholder="UNKNOWN" value="Elara Voss" />
       </div>
       <div class="bfield">
         <div class="bfield-label">Age</div>
-        <input type="text" id="mp-age" placeholder="—" value="16" style="min-width:50px;max-width:60px"/>
+        <input type="text" id="mp-age" placeholder="—" value="16" />
       </div>
       <div class="bfield">
         <div class="bfield-label">Last Seen Location</div>
-        <input type="text" id="mp-location" placeholder="Unknown" value="Dunmore Village Bus Stop" style="min-width:180px"/>
+        <input type="text" id="mp-location" placeholder="Unknown" value="Dunmore Village Bus Stop" />
       </div>
       <div class="bfield">
         <div class="bfield-label">Last Seen Date</div>
         <input type="text" id="mp-date" placeholder="——/——/——" value="Thursday 14th November, 9:02 PM"/>
       </div>
-      <div class="bfield wide">
+      <div class="bfield desc-field">
         <div class="bfield-label">Description</div>
         <textarea id="mp-desc" placeholder="Physical description, clothing, circumstances...">Dark coat, red scarf. Carrying a library book she never returned. Last seen alone at the bus stop.</textarea>
       </div>
@@ -1867,7 +1898,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
   <div class="hud-sep"></div>
   <div class="hud-block">
     <div class="hud-label">Your Scratchpad</div>
-    <button id="notes-btn" onclick="toggleNotes()" title="Open case notes scratchpad">&#128221; Case Notes</button>
+    <button id="notes-btn" onclick="toggleNotes(event)" title="Open case notes scratchpad">&#128221; Case Notes</button>
     <div style="font-family:'Courier Prime',monospace;font-size:7.5px;color:#2a1a38;letter-spacing:0.1em;text-align:center;margin-top:3px;max-width:120px;line-height:1.5">Type your running theory here. Only you can see it.</div>
   </div>
   <div id="hud-message">The case is open. Somewhere, someone knows the truth.</div>
@@ -2229,15 +2260,15 @@ function addSuspect(data={}) {
       </div>
       <div class="c-section c-field">
         <div class="c-label">🔗 Connection</div>
-        <textarea placeholder="Relation to missing person..." style="min-height:40px">${data.connection||''}</textarea>
+        <textarea placeholder="Relation to missing person...">${data.connection||''}</textarea>
       </div>
       <div class="c-section c-field">
         <div class="c-label">🔒 What They're Hiding</div>
-        <textarea placeholder="The thing they won't say..." style="min-height:52px">${data.hiding||''}</textarea>
+        <textarea placeholder="The thing they won't say...">${data.hiding||''}</textarea>
       </div>
       <div class="c-section c-field">
         <div class="c-label">📋 Alibi</div>
-        <textarea placeholder='"I was at home alone..."' style="min-height:52px">${data.alibi||''}</textarea>
+        <textarea placeholder='"I was at home alone..."'>${data.alibi||''}</textarea>
       </div>
       <div class="c-section susp-wrap">
         <div class="susp-labels"><span>Innocent</span><span>Prime Suspect</span></div>
@@ -2259,17 +2290,17 @@ function addSuspect(data={}) {
 
   document.getElementById('board').appendChild(wrapper);
   makeDraggable(wrapper);
-  // Auto-resize all textareas — run at multiple intervals to catch after paint
-  const resizeCardTAs = () => {
+  // Auto-resize textareas after browser has painted the card
+  function resizeAll(){
     wrapper.querySelectorAll('textarea').forEach(ta=>{
       ta.style.height='auto';
       ta.style.height=ta.scrollHeight+'px';
-      ta.addEventListener('input',()=>{ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';});
+      ta.addEventListener('input',function(){this.style.height='auto';this.style.height=this.scrollHeight+'px';},{once:false});
     });
-  };
-  setTimeout(resizeCardTAs, 0);
-  setTimeout(resizeCardTAs, 100);
-  setTimeout(resizeCardTAs, 400);
+  }
+  // rAF ensures layout is complete before measuring scrollHeight
+  requestAnimationFrame(()=>requestAnimationFrame(resizeAll));
+  setTimeout(resizeAll, 200); // fallback for slow renders
 }
 
 function updateSuspectName(uid,name){
@@ -3085,18 +3116,18 @@ function fireCameraFlash(){
 
 /* ── Case Notes scratchpad ── */
 let notesSaveTimer=null;
-function toggleNotes(){
+function toggleNotes(e){
+  if(e) e.stopPropagation(); // prevent immediate close from bubbling
   const panel=document.getElementById('notes-panel');
   const btn=document.getElementById('notes-btn');
   const isOpen=panel.classList.contains('open');
   panel.classList.toggle('open',!isOpen);
   btn.classList.toggle('active',!isOpen);
   if(!isOpen){
-    // Load saved notes
     const ta=document.getElementById('notes-textarea');
-    try{ const saved=localStorage.getItem('case_notes'); if(saved)ta.value=saved; }catch(e){}
+    try{ const saved=localStorage.getItem('case_notes'); if(saved)ta.value=saved; }catch(ex){}
     updateNotesCount();
-    ta.focus();
+    setTimeout(()=>ta.focus(),50);
   }
 }
 function initNotes(){
@@ -3615,7 +3646,7 @@ window.onload=()=>{
 <div id="notes-panel">
   <div class="notes-header">
     <span class="notes-header-label">&#9632; Detective's Case Notes</span>
-    <button class="notes-close" onclick="toggleNotes()">&#10005;</button>
+    <button class="notes-close" onclick="toggleNotes(event)">&#10005;</button>
   </div>
   <textarea id="notes-textarea" placeholder="Running theory, suspicions, patterns you're tracking...&#10;&#10;No one else will see this."></textarea>
   <div class="notes-footer">
