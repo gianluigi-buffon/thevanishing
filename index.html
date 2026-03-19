@@ -1789,7 +1789,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
   </div>
   <div class="hud-sep"></div>
   <div class="hud-block">
+    <div class="hud-label">Your Scratchpad</div>
     <button id="notes-btn" onclick="toggleNotes()" title="Open case notes scratchpad">&#128221; Case Notes</button>
+    <div style="font-family:'Courier Prime',monospace;font-size:7.5px;color:#2a1a38;letter-spacing:0.1em;text-align:center;margin-top:3px;max-width:120px;line-height:1.5">Type your running theory here. Only you can see it.</div>
   </div>
   <div id="hud-message">The case is open. Somewhere, someone knows the truth.</div>
 </div>
@@ -1808,10 +1810,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
 ══════════════════════════════════════════ -->
 <div class="panel active" id="panel-suspects">
   <div class="toolbar">
-    <span class="toolbar-label">▴ Suspects Board</span>
-    <button class="btn btn-add" onclick="addSuspect()">+ Pin Suspect</button>
-    <span class="toolbar-label" style="color:#1e1428;font-size:9px">|</span>
-    <span class="toolbar-label" style="font-size:9px;color:#2a1a38">Drag cards &nbsp;·&nbsp; Click emoji to change &nbsp;·&nbsp; Use Setup to write interrogation response &nbsp;·&nbsp; Each suspect can be interrogated twice</span>
+    <span class="toolbar-label" style="font-size:9px;color:#4a3860">&#9632; Read each suspect's profile &nbsp;·&nbsp; Interrogate to hear their statement (2 chances each) &nbsp;·&nbsp; When you're certain, make your arrest — only 3 attempts</span>
   </div>
   <div id="board">
     <div class="board-empty" id="board-empty">
@@ -1833,10 +1832,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
     <div class="ev-stat sh">Red Herrings <span id="st-herr">0</span></div>
   </div>
   <div class="toolbar">
-    <span class="toolbar-label">&#9652; Evidence Board</span>
-    <button class="btn btn-add" onclick="addEvidence()">+ Add Clue</button>
-    <span class="toolbar-label" style="color:#1e1428;font-size:9px">|</span>
-    <span class="toolbar-label" style="font-size:9px;color:#2a1a38">All clues start locked &nbsp;&middot;&nbsp; Tap CLASSIFIED bar to examine (costs one token) &nbsp;&middot;&nbsp; Link examined clues to suspects</span>
+    <span class="toolbar-label" style="font-size:9px;color:#4a3860">&#9632; Tap a clue to spend a token and reveal its contents &nbsp;·&nbsp; Once revealed, link it to the suspect you think it points to &nbsp;·&nbsp; Use your tokens wisely</span>
   </div>
   <div class="evidence-board" id="evidence-board">
     <div class="ev-empty" id="ev-empty">
@@ -1884,7 +1880,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
 
   <!-- Log header -->
   <div class="tl-log-header">
-    <div class="tl-log-title">&#9632; INCIDENT LOG — CHRONOLOGICAL</div>
+    <div class="tl-log-title">&#9632; Read the timeline — piece together what happened and when</div>
     <div class="tl-log-line"></div>
     <div class="tl-log-count" id="tl-count">0 ENTRIES</div>
   </div>
