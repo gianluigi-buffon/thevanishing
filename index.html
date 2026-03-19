@@ -168,97 +168,63 @@ body::after{
 }
 
 /* ═══════════════════════════════════════════════
-   MISSING PERSON BANNER — FIXED
+   MISSING PERSON BANNER
 ═══════════════════════════════════════════════ */
 #missing-banner{
   position:sticky;top:0;z-index:500;
-  background:linear-gradient(to bottom,#0a0810 0%,#0d0b14 100%);
+  background:linear-gradient(to bottom,#0a0810,#0d0b14);
   border-bottom:2px solid #2a1a40;
-  box-shadow:0 4px 32px rgba(0,0,0,0.9),0 0 60px rgba(107,63,160,0.08);
-  padding:10px 16px 10px;
+  box-shadow:0 4px 32px rgba(0,0,0,0.9);
+  padding:10px 16px;
 }
 .banner-inner{
   max-width:1100px;margin:0 auto;
-  display:flex;align-items:flex-start;gap:12px;
-  flex-wrap:nowrap; /* single row on desktop */
+  display:flex;align-items:center;gap:14px;
+  flex-wrap:nowrap;
 }
+
+/* ── MISSING stamp ── */
 .missing-stamp{
   font-family:'Special Elite',monospace;
-  font-size:clamp(18px,3.5vw,36px);
+  font-size:clamp(16px,2.8vw,34px);
   letter-spacing:0.2em;
   color:#9a1010;
-  text-shadow:
-    0 0 0 #6a0808,
-    1px 0 0 rgba(139,16,16,0.5),
-    -1px 0 0 rgba(139,16,16,0.3),
-    0 0 18px rgba(154,16,16,0.35);
-  transform:rotate(-2.8deg);
-  transform-origin:left center;
+  text-shadow:0 0 0 #6a0808,1px 0 0 rgba(139,16,16,0.5),-1px 0 0 rgba(139,16,16,0.3),0 0 18px rgba(154,16,16,0.35);
+  transform:rotate(-2.5deg);
+  transform-origin:center;
   display:inline-block;
   white-space:nowrap;
-  align-self:center;
-  padding-top:4px;
+  flex-shrink:0;
   animation:stampAge 9s infinite;
   position:relative;
-  flex-shrink:0;
 }
 .missing-stamp::after{
-  content:attr(data-text);
-  position:absolute;inset:0;
-  color:transparent;
-  -webkit-text-stroke:1px rgba(139,16,16,0.08);
-  transform:scaleX(1.01) translateX(1px);
-  pointer-events:none;
+  content:attr(data-text);position:absolute;inset:0;
+  color:transparent;-webkit-text-stroke:1px rgba(139,16,16,0.08);
+  transform:scaleX(1.01) translateX(1px);pointer-events:none;
 }
 @keyframes stampAge{0%,85%,100%{opacity:1}88%{opacity:0.82}92%{opacity:0.95}96%{opacity:0.78}}
 @keyframes redFlicker{0%,96%,100%{opacity:1}97%{opacity:0.65}98.5%{opacity:1}99.5%{opacity:0.8}}
 
+/* ── banner-top-row wraps stamp+photo — transparent on desktop ── */
+.banner-top-row{
+  display:contents; /* children participate directly in banner-inner flex on desktop */
+}
+
+/* ── Photo ── */
 .banner-photo{
-  font-size:44px;line-height:1;
-  width:62px;height:62px;
-  border:2px solid #3a2a18;
-  background:rgba(0,0,0,0.4);
+  font-size:40px;line-height:1;width:58px;height:58px;
+  border:2px solid #3a2a18;background:rgba(0,0,0,0.4);
   display:flex;align-items:center;justify-content:center;
   box-shadow:inset 0 0 12px rgba(0,0,0,0.6),0 3px 12px rgba(0,0,0,0.7);
   flex-shrink:0;cursor:pointer;transition:transform 0.2s;position:relative;
 }
 .banner-photo:hover{transform:scale(1.06)}
-.banner-photo-hint{position:absolute;bottom:2px;right:3px;font-size:8px;font-family:'Courier Prime',monospace;color:#5a4020;letter-spacing:0}
+.banner-photo-hint{position:absolute;bottom:2px;right:3px;font-size:8px;font-family:'Courier Prime',monospace;color:#5a4020}
 
-/* Field grid — responsive using CSS grid */
-.banner-fields{
-  display:grid;
-  grid-template-columns:1fr auto 1fr 1fr;
-  grid-template-rows:auto auto;
-  gap:4px 14px;
-  flex:1;
-  min-width:0;
-  align-items:start;
-}
-.bfield{display:flex;flex-direction:column;gap:1px;min-width:0;overflow:hidden}
-.bfield-label{
-  font-family:'Courier Prime',monospace;
-  font-size:7px;letter-spacing:0.22em;text-transform:uppercase;color:#4a3860;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.bfield input,.bfield textarea{
-  background:transparent;border:none;border-bottom:1px solid #2a1f30;
-  font-family:'Special Elite',monospace;font-size:12px;color:#b8a890;
-  outline:none;padding:1px 0;transition:border-color 0.2s;
-  width:100%;min-width:0;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.bfield input:focus,.bfield textarea:focus{border-bottom-color:#5a3a80}
-/* Description spans full width on second row */
-.bfield.desc-field{grid-column:1/-1}
-.bfield textarea{
-  resize:none;height:28px;font-size:11px;line-height:1.3;
-  white-space:normal;overflow:hidden;text-overflow:clip;
-}
-
-/* Photo emoji picker */
+/* Photo picker */
 .photo-picker{
-  display:none;position:absolute;top:68px;left:0;
+  display:none;position:absolute;top:64px;left:0;
   background:#100c18;border:1px solid #2a1a40;
   padding:8px;z-index:600;flex-wrap:wrap;gap:4px;width:200px;
   box-shadow:0 8px 24px rgba(0,0,0,0.95);
@@ -267,29 +233,79 @@ body::after{
 .photo-opt{font-size:22px;cursor:pointer;padding:2px;transition:transform 0.1s}
 .photo-opt:hover{transform:scale(1.25)}
 
-/* Mobile banner: stack into two rows */
-@media(max-width:680px){
+/* ── Fields ── */
+.banner-fields{
+  display:flex;flex-wrap:wrap;
+  gap:3px 18px;
+  flex:1;min-width:0;
+  align-items:flex-start;
+}
+.bfield{display:flex;flex-direction:column;gap:1px;min-width:0}
+.bfield-label{
+  font-family:'Courier Prime',monospace;font-size:7px;
+  letter-spacing:0.2em;text-transform:uppercase;color:#4a3860;
+  white-space:nowrap;
+}
+.bfield input,.bfield textarea{
+  background:transparent;border:none;border-bottom:1px solid #2a1f30;
+  font-family:'Special Elite',monospace;font-size:12px;color:#b8a890;
+  outline:none;padding:1px 0;width:100%;min-width:0;
+  transition:border-color 0.2s;
+}
+.bfield input:focus,.bfield textarea:focus{border-bottom-color:#5a3a80}
+.bfield textarea{resize:none;height:auto;min-height:26px;font-size:11px;line-height:1.4;overflow:hidden}
+/* Description takes full width */
+.bfield.desc-field{width:100%;flex-basis:100%}
+
+/* ══════════════════════════════════════
+   RESPONSIVE BREAKPOINTS — BANNER
+══════════════════════════════════════ */
+
+/* ── MOBILE: < 600px ── */
+@media(max-width:599px){
+  #missing-banner{padding:8px 12px}
   .banner-inner{
-    flex-wrap:wrap;
+    flex-direction:column;
+    align-items:stretch;
     gap:8px;
   }
+  /* Row 1: stamp + photo side by side */
+  .banner-top-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    width:100%;
+  }
   .missing-stamp{
-    font-size:clamp(16px,5.5vw,26px);
+    font-size:clamp(18px,5.5vw,24px);
     letter-spacing:0.15em;
+    flex:1;
+    text-align:center;
   }
   .banner-photo{
-    width:54px;height:54px;font-size:36px;
+    width:50px;height:50px;font-size:32px;
   }
+  /* Row 2: fields in a clean 2-column grid */
   .banner-fields{
+    display:grid;
     grid-template-columns:1fr 1fr;
-    grid-template-rows:auto auto auto;
+    gap:6px 10px;
     width:100%;
-    gap:4px 10px;
   }
-  .bfield.desc-field{grid-column:1/-1}
-  .bfield input,.bfield textarea{
-    font-size:11px;
-  }
+  .bfield.desc-field{grid-column:1/-1;width:100%}
+  .bfield-label{font-size:7px;letter-spacing:0.15em}
+  .bfield input,.bfield textarea{font-size:12px}
+  /* Age field stays narrow */
+  .bfield:has(#mp-age){grid-column:span 1}
+}
+
+/* ── TABLET: 600px–900px ── */
+@media(min-width:600px) and (max-width:900px){
+  .banner-inner{gap:10px}
+  .missing-stamp{font-size:clamp(16px,3vw,26px);letter-spacing:0.15em}
+  .banner-photo{width:54px;height:54px;font-size:36px}
+  .banner-fields{gap:4px 12px}
+  .bfield input,.bfield textarea{font-size:11px}
 }
 
 /* ═══════════════════════════════════════════════
@@ -298,41 +314,43 @@ body::after{
 #case-name-bar{
   background:var(--bg2);
   border-bottom:1px solid #1e1530;
-  padding:10px 20px;
+  padding:8px 16px;
   text-align:center;
+  overflow:hidden;
 }
 #case-name-input{
   font-family:'Special Elite',monospace;
-  font-size:clamp(16px,3vw,26px);
-  letter-spacing:0.12em;
+  font-size:clamp(13px,2.8vw,26px);
+  letter-spacing:0.1em;
   color:#8a7a9a;
   background:transparent;border:none;outline:none;
   text-align:center;width:100%;max-width:700px;
   border-bottom:1px dashed #2a1f38;
   transition:color 0.2s,border-color 0.2s;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 #case-name-input:focus{color:#c8b8d8;border-bottom-color:#5a3a80}
 
 /* ═══════════════════════════════════════════════
-   HEADER BAR (HUD)
+   HUD
 ═══════════════════════════════════════════════ */
 #hud{
   background:linear-gradient(to bottom,#0d0b14,#0a0810);
   border-bottom:1px solid #1e1530;
-  padding:8px 20px;
+  padding:8px 16px;
   display:flex;align-items:center;justify-content:center;
-  gap:24px;flex-wrap:wrap;
+  gap:16px;flex-wrap:wrap;
 }
 .hud-block{display:flex;flex-direction:column;align-items:center;gap:2px}
 .hud-label{font-family:'Courier Prime',monospace;font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:#3a2a50}
 .hud-value{font-family:'Special Elite',monospace;font-size:13px;color:#6a5880;letter-spacing:0.1em}
-.hud-sep{width:1px;height:36px;background:#1e1530;flex-shrink:0}
-#hud-timer{font-family:'Courier Prime',monospace;font-size:15px;color:#4a3860;letter-spacing:0.15em}
+.hud-sep{width:1px;height:32px;background:#1e1530;flex-shrink:0}
+#hud-timer{font-family:'Courier Prime',monospace;font-size:14px;color:#4a3860;letter-spacing:0.12em}
 .token-used{filter:grayscale(1) brightness(0.25)}
 #hud-message{
   font-family:'IM Fell English',serif;font-style:italic;
   font-size:11px;color:#4a3860;letter-spacing:0.05em;
-  text-align:center;flex-basis:100%;
+  text-align:center;flex-basis:100%;margin-top:2px;
   transition:color 0.8s;
 }
 #hud-message.nervous{color:#9a5050;animation:nervousPulse 3s infinite}
@@ -341,16 +359,11 @@ body::after{
 /* Confidence meter */
 .confidence-wrap{display:flex;flex-direction:column;align-items:center;gap:3px}
 .confidence-bar-outer{
-  width:120px;height:6px;background:#1a1228;
+  width:100px;height:6px;background:#1a1228;
   border:1px solid #2a1a40;position:relative;
   transition:box-shadow 0.8s;
 }
-/* Pulsing glow when confidence > 60% */
 .confidence-bar-outer.glowing{
-  box-shadow:
-    0 0 6px rgba(107,63,160,0.5),
-    0 0 14px rgba(107,63,160,0.25),
-    0 0 28px rgba(107,63,160,0.12);
   animation:confPulse 2s ease-in-out infinite;
 }
 @keyframes confPulse{
@@ -364,6 +377,15 @@ body::after{
   box-shadow:0 0 8px var(--purple-glow);
 }
 #confidence-pct{font-family:'Courier Prime',monospace;font-size:10px;color:#5a4870}
+
+/* ── HUD mobile: hide separators, tighter wrapping ── */
+@media(max-width:599px){
+  #hud{gap:10px;padding:8px 10px}
+  .hud-sep{display:none}
+  .hud-label{font-size:7px;letter-spacing:0.12em}
+  #hud-timer{font-size:12px}
+  .confidence-bar-outer{width:80px}
+}
 
 /* ── Camera flash on examine ── */
 #cam-flash{
@@ -687,7 +709,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
 .c-emoji-opt:hover{transform:scale(1.3)}
 
 /* ── Mobile: single column, no tilt, full width cards ── */
-@media (max-width: 600px) {
+@media(max-width:599px){
   #board{
     padding:40px 12px 60px;
     gap:36px;
@@ -696,72 +718,22 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
   }
   .card-wrapper{
     width:calc(100vw - 24px);
-    max-width:400px;
-    /* Remove tilt on mobile so nothing clips */
+    max-width:420px;
     transform:none !important;
   }
-  .suspect-card{
-    padding:28px 16px 16px;
-  }
-  .c-field textarea{
-    min-height:60px;
-  }
-  /* Bigger tap targets on mobile */
-  .c-btn{
-    padding:10px 8px;
-    font-size:10px;
-  }
-  /* Tab bar scrolls horizontally on small screens */
-  #tab-bar{
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-  }
-  .tab{
-    padding:10px 16px;
-    font-size:10px;
-    letter-spacing:0.1em;
-    white-space:nowrap;
-    flex-shrink:0;
-  }
-  /* HUD wraps and centres on mobile */
-  #hud{
-    gap:12px;
-    padding:8px 12px;
-  }
-  .hud-sep{display:none}
-  /* Banner wraps better on mobile */
-  .banner-inner{
-    gap:10px;
-  }
-  .banner-fields{
-    gap:6px 12px;
-  }
+  .suspect-card{padding:28px 16px 16px}
+  .c-field textarea{min-height:48px}
+  .c-btn{padding:10px 8px;font-size:10px}
+  #tab-bar{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tab{padding:10px 14px;font-size:10px;letter-spacing:0.08em;white-space:nowrap;flex-shrink:0}
 }
 
-/* ── Tablet: 2-column grid, gentle tilt preserved ── */
-@media (min-width:601px) and (max-width:900px) {
-  #board{
-    padding:44px 20px 60px;
-    gap:36px;
-    justify-content:center;
-  }
-  .card-wrapper{
-    width:calc(50vw - 40px);
-    max-width:280px;
-  }
-  /* Halve the tilt so cards don't clip each other */
-  .card-wrapper[style*="rotate"]{
-    transform:rotate(calc(var(--tilt,0) * 0.5)) !important;
-  }
-  #tab-bar{
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-  }
-  .tab{
-    padding:10px 16px;
-    white-space:nowrap;
-    flex-shrink:0;
-  }
+/* ── Tablet: 2-column card layout ── */
+@media(min-width:600px) and (max-width:900px){
+  #board{padding:44px 20px 60px;gap:36px;justify-content:center}
+  .card-wrapper{width:calc(50vw - 40px);max-width:280px}
+  #tab-bar{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tab{padding:10px 16px;white-space:nowrap;flex-shrink:0}
 }
 
 /* ═══════════════════════════════════════════════
@@ -1829,14 +1801,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
 ══════════════════════════════════════════ -->
 <div id="missing-banner">
   <div class="banner-inner">
-    <div class="missing-stamp">⚠ MISSING</div>
-    <div style="position:relative">
-      <div class="banner-photo" id="banner-photo-btn" onclick="togglePhotoPicker()" title="Click to change">
-        <span id="mp-emoji">👧</span>
-        <span class="banner-photo-hint">▸ change</span>
-      </div>
-      <div class="photo-picker" id="photo-picker">
-        <!-- filled by JS -->
+    <div class="banner-top-row">
+      <div class="missing-stamp">⚠ MISSING</div>
+      <div style="position:relative">
+        <div class="banner-photo" id="banner-photo-btn" onclick="togglePhotoPicker()" title="Click to change">
+          <span id="mp-emoji">👧</span>
+          <span class="banner-photo-hint">▸ change</span>
+        </div>
+        <div class="photo-picker" id="photo-picker">
+          <!-- filled by JS -->
+        </div>
       </div>
     </div>
     <div class="banner-fields">
