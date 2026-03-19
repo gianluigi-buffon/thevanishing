@@ -362,8 +362,8 @@ body::after{
 #notes-panel{
   position:fixed;
   bottom:54px;right:16px;
-  width:310px;
-  z-index:600;
+  width:min(310px, calc(100vw - 32px));
+  z-index:9500;
   background:#0a0812;
   border:1px solid #1e1030;
   box-shadow:0 8px 36px rgba(0,0,0,0.9),0 0 24px rgba(107,63,160,0.08);
@@ -1922,19 +1922,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;heigh
 <div id="token-flash"><div class="token-flash-msg" id="token-flash-msg"></div></div>
 <div id="no-tokens-msg">NO EXAMINATION TOKENS REMAINING</div>
 
-<!-- Case Notes panel -->
-<div id="notes-panel">
-  <div class="notes-header">
-    <span class="notes-header-label">&#9632; Detective's Case Notes</span>
-    <button class="notes-close" onclick="toggleNotes()">&#10005;</button>
-  </div>
-  <textarea id="notes-textarea" placeholder="Running theory, suspicions, patterns you're tracking...&#10;&#10;No one else will see this."></textarea>
-  <div class="notes-footer">
-    <span class="notes-saved" id="notes-saved">Unsaved</span>
-    <span class="notes-char-count" id="notes-char-count">0 chars</span>
-  </div>
-</div>
-
 <!-- ══════════════════════════════════════════
      EVENTS PANEL
 ══════════════════════════════════════════ -->
@@ -2242,15 +2229,15 @@ function addSuspect(data={}) {
       </div>
       <div class="c-section c-field">
         <div class="c-label">🔗 Connection</div>
-        <input type="text" placeholder="Relation to missing person..." value="${data.connection||''}" />
+        <textarea placeholder="Relation to missing person..." style="min-height:40px">${data.connection||''}</textarea>
       </div>
       <div class="c-section c-field">
         <div class="c-label">🔒 What They're Hiding</div>
-        <textarea placeholder="The thing they won't say...">${data.hiding||''}</textarea>
+        <textarea placeholder="The thing they won't say..." style="min-height:52px">${data.hiding||''}</textarea>
       </div>
       <div class="c-section c-field">
         <div class="c-label">📋 Alibi</div>
-        <textarea placeholder='"I was at home alone..."'>${data.alibi||''}</textarea>
+        <textarea placeholder='"I was at home alone..."' style="min-height:52px">${data.alibi||''}</textarea>
       </div>
       <div class="c-section susp-wrap">
         <div class="susp-labels"><span>Innocent</span><span>Prime Suspect</span></div>
@@ -2272,14 +2259,17 @@ function addSuspect(data={}) {
 
   document.getElementById('board').appendChild(wrapper);
   makeDraggable(wrapper);
-  // Auto-resize all textareas in this card to show full content
-  setTimeout(()=>{
+  // Auto-resize all textareas — run at multiple intervals to catch after paint
+  const resizeCardTAs = () => {
     wrapper.querySelectorAll('textarea').forEach(ta=>{
       ta.style.height='auto';
       ta.style.height=ta.scrollHeight+'px';
       ta.addEventListener('input',()=>{ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';});
     });
-  },50);
+  };
+  setTimeout(resizeCardTAs, 0);
+  setTimeout(resizeCardTAs, 100);
+  setTimeout(resizeCardTAs, 400);
 }
 
 function updateSuspectName(uid,name){
@@ -3620,5 +3610,19 @@ window.onload=()=>{
 </script>
 
 </div><!-- end #app-wrapper -->
+
+<!-- Case Notes panel — outside app-wrapper so position:fixed works on all browsers -->
+<div id="notes-panel">
+  <div class="notes-header">
+    <span class="notes-header-label">&#9632; Detective's Case Notes</span>
+    <button class="notes-close" onclick="toggleNotes()">&#10005;</button>
+  </div>
+  <textarea id="notes-textarea" placeholder="Running theory, suspicions, patterns you're tracking...&#10;&#10;No one else will see this."></textarea>
+  <div class="notes-footer">
+    <span class="notes-saved" id="notes-saved">Unsaved</span>
+    <span class="notes-char-count" id="notes-char-count">0 chars</span>
+  </div>
+</div>
+
 </body>
 </html>
